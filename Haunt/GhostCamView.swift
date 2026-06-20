@@ -9,6 +9,7 @@ struct GhostCamView: View {
     @State private var showShare = false
     @State private var showCamera = false
     @State private var showGallery = false
+    @State private var revealed = false
 
     var body: some View {
         ZStack {
@@ -70,6 +71,9 @@ struct GhostCamView: View {
                 }.padding(.trailing, 16).padding(.top, 8)
                 Spacer()
             }
+
+            Vignette()
+            GrainOverlay()
         }
         .preferredColorScheme(.dark)
         .sheet(isPresented: $showGallery) { GalleryView() }
@@ -86,7 +90,7 @@ struct GhostCamView: View {
 
     private var header: some View {
         VStack(spacing: 4) {
-            Text("Haunt").font(.custom("PicNic-Regular", size: 64)).foregroundStyle(.white)
+            Text("Haunt").font(.custom("PicNic-Regular", size: 64)).foregroundStyle(.white).flicker()
             Text("SUMMON THE DEAD INTO YOUR PHOTOS")
                 .font(.system(.caption, design: .monospaced)).tracking(2)
                 .foregroundStyle(.white.opacity(0.4))
@@ -136,11 +140,22 @@ struct GhostCamView: View {
             Text("PICK YOUR GHOST").font(.system(.caption, design: .monospaced)).tracking(3).foregroundStyle(.white.opacity(0.5))
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: cols, spacing: 10) {
-                    surpriseCell
-                    ForEach(GhostStyle.library) { s in ghostThumb(s) }
+                    reveal(surpriseCell, index: 0)
+                    ForEach(Array(GhostStyle.library.enumerated()), id: \.element.id) { i, s in
+                        reveal(ghostThumb(s), index: i + 1)
+                    }
                 }.padding(.horizontal)
             }
         }
+        .onAppear { revealed = true }
+    }
+
+    /// Staggered "materialize" reveal — each cell fades + rises in, delayed by index.
+    private func reveal<V: View>(_ view: V, index: Int) -> some View {
+        view
+            .opacity(revealed ? 1 : 0)
+            .offset(y: revealed ? 0 : 14)
+            .animation(.easeOut(duration: 0.45).delay(Double(index) * 0.035), value: revealed)
     }
 
     private var surpriseCell: some View {
