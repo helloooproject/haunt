@@ -18,7 +18,10 @@ targets:
     info:
       path: Haunt/Info.plist
       properties:
-        UILaunchScreen: {}
+        UILaunchScreen:
+          UIColorName: LaunchBG
+          UIImageName: LaunchGhost
+          UIImageRespectsSafeAreaInsets: false
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSPhotoLibraryUsageDescription: "Haunt needs your photos to reveal the spirits hiding inside them."
         NSCameraUsageDescription: "Haunt uses your camera to scan rooms for spirits."

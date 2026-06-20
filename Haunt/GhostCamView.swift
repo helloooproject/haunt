@@ -11,7 +11,11 @@ struct GhostCamView: View {
 
     var body: some View {
         ZStack {
+            // Haunted backdrop: the launch art, dimmed, so the home feels possessed not empty.
             Color.black.ignoresSafeArea()
+            Image("LaunchGhost").resizable().scaledToFill().ignoresSafeArea()
+                .opacity(0.22).blur(radius: 2)
+            LinearGradient(colors: [.black.opacity(0.5), .black.opacity(0.85)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
 
             VStack(spacing: 0) {
                 header.padding(.top, 24)
