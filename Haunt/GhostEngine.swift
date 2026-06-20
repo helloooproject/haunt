@@ -31,7 +31,7 @@ final class GhostEngine: ObservableObject {
         let prompt = prompts.randomElement()!
         Task {
             do {
-                let img = try await MoondraftClient.summonGhost(into: photo, prompt: prompt)
+                let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt)
                 self.result = img
                 self.ghostCount += 1
                 self.isSummoning = false
@@ -41,7 +41,7 @@ final class GhostEngine: ObservableObject {
                 self.isSummoning = false
                 self.errorText = (error as? LocalizedError)?.errorDescription ?? "The summon failed."
                 Analytics.track("ghost_failed", ["error": "\(error)"])
-                if case MoondraftError.noCredits = error { self.showPaywall = true }
+                if case GhostError.noCredits = error { self.showPaywall = true }
             }
         }
     }

@@ -12,12 +12,14 @@
 		7F989833306E77EE66FD4981 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9021D04E58D1D4892055697D /* Analytics.swift */; };
 		8CE42C9C27852DAED00D46AC /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9292BA7F128D16B6D2987E /* PaywallView.swift */; };
 		A63AB8F054E5640540AAE1CE /* MoondraftClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFF7AA8D633323681E4900 /* MoondraftClient.swift */; };
+		D89217394318D82496DA01BF /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA67C3AD63C9D892454979E /* Secrets.swift */; };
 		F09D9423034AC8CD76E87A7D /* HauntApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostEngine.swift; sourceTree = "<group>"; };
 		2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HauntApp.swift; sourceTree = "<group>"; };
+		4EA67C3AD63C9D892454979E /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		59CFF7AA8D633323681E4900 /* MoondraftClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoondraftClient.swift; sourceTree = "<group>"; };
 		6C9292BA7F128D16B6D2987E /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		9021D04E58D1D4892055697D /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
@@ -43,6 +45,7 @@
 				2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */,
 				59CFF7AA8D633323681E4900 /* MoondraftClient.swift */,
 				6C9292BA7F128D16B6D2987E /* PaywallView.swift */,
+				4EA67C3AD63C9D892454979E /* Secrets.swift */,
 			);
 			path = Haunt;
 			sourceTree = "<group>";
@@ -119,6 +122,7 @@
 				F09D9423034AC8CD76E87A7D /* HauntApp.swift in Sources */,
 				A63AB8F054E5640540AAE1CE /* MoondraftClient.swift in Sources */,
 				8CE42C9C27852DAED00D46AC /* PaywallView.swift in Sources */,
+				D89217394318D82496DA01BF /* Secrets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
