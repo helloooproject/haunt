@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C12DEDE60D8E5990EBF8017 /* GhostStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA992FEDCAA38757A4F66D1 /* GhostStyle.swift */; };
 		1AE959ED47B5C1D5EA011DAE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC94D4FA181CDBD72560C176 /* RootView.swift */; };
+		2060384EEA7667D22B537587 /* SummonStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6679C656E0F4D24D91C5889 /* SummonStore.swift */; };
 		3B1A17B40594C7D8D2F8D714 /* PicNic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */; };
 		4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */ = {isa = PBXBuildFile; fileRef = 8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */; };
 		5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E902A076FC50510E46B41A /* CameraPicker.swift */; };
@@ -16,6 +17,7 @@
 		5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */; };
 		7F989833306E77EE66FD4981 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9021D04E58D1D4892055697D /* Analytics.swift */; };
 		8CE42C9C27852DAED00D46AC /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9292BA7F128D16B6D2987E /* PaywallView.swift */; };
+		926DA3A4193AB552AFC23CFC /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DDB85F53B717BB887DE63AF /* GalleryView.swift */; };
 		A63AB8F054E5640540AAE1CE /* MoondraftClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFF7AA8D633323681E4900 /* MoondraftClient.swift */; };
 		D0BEFCA1C58F6A96F1220452 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C7B1FC9014670C5F7B173FA /* Assets.xcassets */; };
 		D89217394318D82496DA01BF /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA67C3AD63C9D892454979E /* Secrets.swift */; };
@@ -23,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1DDB85F53B717BB887DE63AF /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostEngine.swift; sourceTree = "<group>"; };
 		2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HauntApp.swift; sourceTree = "<group>"; };
 		4EA67C3AD63C9D892454979E /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
@@ -35,6 +38,7 @@
 		9021D04E58D1D4892055697D /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		A7E902A076FC50510E46B41A /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		AA1283CDF60AAB55B398A995 /* Haunt.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Haunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6679C656E0F4D24D91C5889 /* SummonStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummonStore.swift; sourceTree = "<group>"; };
 		CC94D4FA181CDBD72560C176 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostCamView.swift; sourceTree = "<group>"; };
 		F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PicNic-Regular.otf"; sourceTree = "<group>"; };
@@ -63,6 +67,7 @@
 				9021D04E58D1D4892055697D /* Analytics.swift */,
 				8C7B1FC9014670C5F7B173FA /* Assets.xcassets */,
 				A7E902A076FC50510E46B41A /* CameraPicker.swift */,
+				1DDB85F53B717BB887DE63AF /* GalleryView.swift */,
 				EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */,
 				278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */,
 				7AA992FEDCAA38757A4F66D1 /* GhostStyle.swift */,
@@ -73,6 +78,7 @@
 				CC94D4FA181CDBD72560C176 /* RootView.swift */,
 				4EA67C3AD63C9D892454979E /* Secrets.swift */,
 				8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */,
+				B6679C656E0F4D24D91C5889 /* SummonStore.swift */,
 				81C25568B89F0600B3532FAA /* Fonts */,
 			);
 			path = Haunt;
@@ -161,6 +167,7 @@
 			files = (
 				7F989833306E77EE66FD4981 /* Analytics.swift in Sources */,
 				5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */,
+				926DA3A4193AB552AFC23CFC /* GalleryView.swift in Sources */,
 				53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */,
 				5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */,
 				0C12DEDE60D8E5990EBF8017 /* GhostStyle.swift in Sources */,
@@ -169,6 +176,7 @@
 				8CE42C9C27852DAED00D46AC /* PaywallView.swift in Sources */,
 				1AE959ED47B5C1D5EA011DAE /* RootView.swift in Sources */,
 				D89217394318D82496DA01BF /* Secrets.swift in Sources */,
+				2060384EEA7667D22B537587 /* SummonStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

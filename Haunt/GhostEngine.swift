@@ -63,6 +63,7 @@ final class GhostEngine: ObservableObject {
                 self.result = img
                 self.ghostCount += 1
                 self.isSummoning = false
+                SummonStore.shared.save(img, preset: style.name, mode: cinematic ? "Cinematic" : "Keep my room")
                 Analytics.track("ghost_rendered", ["count": self.ghostCount])
                 self.maybeAskForReview()      // positive moment: a ghost just appeared
             } catch {

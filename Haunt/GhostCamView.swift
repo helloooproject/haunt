@@ -8,6 +8,7 @@ struct GhostCamView: View {
     @State private var sourcePhoto: UIImage?
     @State private var showShare = false
     @State private var showCamera = false
+    @State private var showGallery = false
 
     var body: some View {
         ZStack {
@@ -17,45 +18,58 @@ struct GhostCamView: View {
                 .opacity(0.22).blur(radius: 2)
             LinearGradient(colors: [.black.opacity(0.5), .black.opacity(0.85)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                header.padding(.top, 24)
-                Spacer().frame(height: 20)
+            VStack(spacing: 12) {
+                header.padding(.top, 14)
 
-                if engine.result != nil || sourcePhoto != nil {
-                    ZStack {
-                        if let ghost = engine.result {
-                            Image(uiImage: ghost).resizable().scaledToFit()
-                                .clipShape(RoundedRectangle(cornerRadius: 18))
-                                .transition(.opacity)
-                        } else if let src = sourcePhoto {
-                            Image(uiImage: src).resizable().scaledToFit()
-                                .clipShape(RoundedRectangle(cornerRadius: 18))
-                                .overlay { if engine.isSummoning { ScanningOverlay() } }
+                // Flexible middle: image (or grid) fills remaining space so controls always sit at the bottom.
+                Group {
+                    if engine.result != nil || sourcePhoto != nil {
+                        ZStack {
+                            if let ghost = engine.result {
+                                Image(uiImage: ghost).resizable().scaledToFit()
+                                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                                    .transition(.opacity)
+                            } else if let src = sourcePhoto {
+                                Image(uiImage: src).resizable().scaledToFit()
+                                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                                    .overlay { if engine.isSummoning { ScanningOverlay() } }
+                            }
                         }
+                        .padding(.horizontal)
+                    } else {
+                        ghostGrid   // PICK YOUR GHOST — fills the home
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 420)
-                    .padding(.horizontal)
-                    Spacer(minLength: 16)
-                } else {
-                    ghostGrid   // PICK YOUR GHOST — fills the home
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                 if let err = engine.errorText {
                     Text(err).font(.callout).foregroundStyle(.red.opacity(0.9))
-                        .multilineTextAlignment(.center).padding(.horizontal).padding(.bottom, 8)
+                        .multilineTextAlignment(.center).padding(.horizontal)
                 }
 
                 controls
                 if !engine.unlocked {
                     Text("\(engine.freeRemaining) FREE SUMMONS LEFT")
                         .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.4))
-                        .padding(.top, 10)
                 }
             }
-            .padding(.top, 8)
-            .padding(.bottom, 12)
+            .padding(.bottom, 10)
+
+            // Crypt (gallery) button, top-right
+            VStack {
+                HStack {
+                    Spacer()
+                    Button { showGallery = true } label: {
+                        Image(systemName: "square.grid.2x2.fill").font(.system(size: 17))
+                            .foregroundStyle(.white.opacity(0.7)).padding(10)
+                            .background(.white.opacity(0.1), in: Circle())
+                    }
+                }.padding(.trailing, 16).padding(.top, 8)
+                Spacer()
+            }
         }
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showGallery) { GalleryView() }
         .onChange(of: pickerItem) { _, item in loadPhoto(item) }
         .sheet(isPresented: $engine.showPaywall) { PaywallView(engine: engine) }
         .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [img]) } }
@@ -78,11 +92,14 @@ struct GhostCamView: View {
 
     @ViewBuilder private var controls: some View {
         if engine.result != nil {
-            HStack(spacing: 14) {
-                actionButton("Share", "square.and.arrow.up") { showShare = true; Analytics.track("shared") }
-                actionButton("Again", "arrow.counterclockwise") { if let s = sourcePhoto { engine.summon(from: s) } }
-                actionButton("New photo", "photo.on.rectangle") { reset() }
-            }.padding(.horizontal)
+            VStack(spacing: 12) {
+                modeToggle   // flip vibe, then "Again" re-renders in it
+                HStack(spacing: 14) {
+                    actionButton("Share", "square.and.arrow.up") { showShare = true; Analytics.track("shared") }
+                    actionButton("Again", "arrow.counterclockwise") { if let s = sourcePhoto { engine.summon(from: s) } }
+                    actionButton("New photo", "photo.on.rectangle") { reset() }
+                }.padding(.horizontal)
+            }
         } else if sourcePhoto != nil {
             VStack(spacing: 14) {
                 modeToggle
