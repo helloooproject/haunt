@@ -16,12 +16,12 @@ struct GhostStyle: Identifiable, Hashable {
     var referenceImage: UIImage? { referenceAsset.flatMap { UIImage(named: $0) } }
 
     static let library: [GhostStyle] = [
-        .init(id: "victorian", name: "The Lady",     emoji: "🕯️", prompt: "insert a translucent, pale Victorian woman in a faded mourning dress, hollow eyes, long dark hair, partially see-through, eerie and unsettling."),
-        .init(id: "shadow",    name: "Shadow",       emoji: "🌑", prompt: "insert a tall featureless dark shadow figure standing in the background, no face, only a black silhouette of a person, deeply unsettling."),
-        .init(id: "child",     name: "The Child",    emoji: "🧸", prompt: "insert a small pale translucent child standing still and facing away, faded vintage clothes, liminal and eerie."),
-        .init(id: "oldwoman",  name: "The Crone",    emoji: "👁️", prompt: "insert a gaunt elderly woman with hollow eyes and drained colorless skin, half-hidden in shadow, see-through and uncanny."),
-        .init(id: "soldier",   name: "The Soldier",  emoji: "🎖️", prompt: "insert a faint translucent figure in a tattered old military uniform, hollow stare, desaturated and ghostly."),
-        .init(id: "veiled",    name: "The Veiled",   emoji: "👰", prompt: "insert a pale figure draped in a long translucent veil obscuring the face, motionless, eerie and liminal.")
+        .init(id: "victorian", name: "The Lady",    emoji: "🕯️", prompt: "insert a gaunt, ashen Victorian woman in a tattered mourning dress, hollow black eye sockets, long matted hair hanging over her face, staring directly into the camera, standing far too close, slightly translucent, dread-inducing and deeply wrong."),
+        .init(id: "shadow",    name: "Shadow",      emoji: "🌑", prompt: "insert an unnaturally tall, elongated featureless black silhouette looming in the room, faceless, limbs too long, leaning toward the camera, pure dread."),
+        .init(id: "child",     name: "The Child",   emoji: "🧸", prompt: "insert a pale hollow-eyed child standing unnaturally still and facing the camera dead-on, ashen skin, faded vintage clothes, wrong proportions, profoundly unsettling."),
+        .init(id: "crone",     name: "The Crone",   emoji: "👁️", prompt: "insert a gaunt ashen old woman lunging from the shadows toward the camera, sunken hollow eyes, mouth open in a silent scream, skeletal grasping hands, terrifying and uncanny."),
+        .init(id: "tall",      name: "The Tall One",emoji: "🚪", prompt: "insert an impossibly tall, thin pallid figure with a blank featureless face, hunched against the ceiling, watching, limbs unnaturally long, deeply frightening."),
+        .init(id: "veiled",    name: "The Veiled",  emoji: "👰", prompt: "insert a pallid figure draped in a torn translucent veil with a gaunt face pressing through the fabric, hollow eyes visible underneath, standing close and staring, dread-filled.")
     ]
 
     static var random: GhostStyle { library.randomElement()! }
