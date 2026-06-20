@@ -21,7 +21,7 @@ struct GhostCamView: View {
             VStack(spacing: 12) {
                 header.padding(.top, 14)
 
-                // Flexible middle: image (or grid) fills remaining space so controls always sit at the bottom.
+                // Middle fills remaining space; controls are pinned via safeAreaInset below.
                 Group {
                     if engine.result != nil || sourcePhoto != nil {
                         ZStack {
@@ -41,19 +41,22 @@ struct GhostCamView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-                if let err = engine.errorText {
-                    Text(err).font(.callout).foregroundStyle(.red.opacity(0.9))
-                        .multilineTextAlignment(.center).padding(.horizontal)
-                }
-
-                controls
-                if !engine.unlocked {
-                    Text("\(engine.freeRemaining) FREE SUMMONS LEFT")
-                        .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.4))
-                }
             }
-            .padding(.bottom, 10)
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 10) {
+                    if let err = engine.errorText {
+                        Text(err).font(.callout).foregroundStyle(.red.opacity(0.9))
+                            .multilineTextAlignment(.center).padding(.horizontal)
+                    }
+                    controls
+                    if !engine.unlocked {
+                        Text("\(engine.freeRemaining) FREE SUMMONS LEFT")
+                            .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.4))
+                    }
+                }
+                .padding(.top, 8).padding(.bottom, 6)
+                .background(.black.opacity(0.6))
+            }
 
             // Crypt (gallery) button, top-right
             VStack {
