@@ -46,9 +46,9 @@ struct GhostCamView: View {
                 }
 
                 controls
-                if !engine.hasPro {
-                    Text("\(engine.freeRemaining) free summons left")
-                        .font(.footnote).foregroundStyle(.white.opacity(0.4))
+                if !engine.unlocked {
+                    Text("\(engine.freeRemaining) FREE SUMMONS LEFT")
+                        .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.4))
                         .padding(.top, 10)
                 }
             }
@@ -70,7 +70,9 @@ struct GhostCamView: View {
     private var header: some View {
         VStack(spacing: 4) {
             Text("Haunt").font(.custom("PicNic-Regular", size: 64)).foregroundStyle(.white)
-            Text("summon the dead into your photos").font(.subheadline).foregroundStyle(.white.opacity(0.45))
+            Text("SUMMON THE DEAD INTO YOUR PHOTOS")
+                .font(.system(.caption, design: .monospaced)).tracking(2)
+                .foregroundStyle(.white.opacity(0.4))
         }
     }
 
@@ -84,7 +86,7 @@ struct GhostCamView: View {
         } else if sourcePhoto != nil {
             VStack(spacing: 14) {
                 stylePicker
-                primaryButton(engine.isSummoning ? "Summoning…" : "👻 Summon ghost") {
+                primaryButton(engine.isSummoning ? "SUMMONING…" : "SUMMON") {
                     if let s = sourcePhoto { engine.summon(from: s) }
                 }.disabled(engine.isSummoning)
             }
@@ -92,12 +94,13 @@ struct GhostCamView: View {
             VStack(spacing: 12) {
                 if CameraPicker.isAvailable {
                     Button { showCamera = true } label: {
-                        Label("Take a photo", systemImage: "camera.fill").primaryLabelStyle()
+                        Label("TAKE A PHOTO", systemImage: "camera.fill").primaryLabelStyle()
                     }
                 }
                 PhotosPicker(selection: $pickerItem, matching: .images) {
-                    Label("Choose a photo", systemImage: "photo")
-                        .font(.headline).foregroundStyle(.white)
+                    Label("CHOOSE A PHOTO", systemImage: "photo")
+                        .font(.system(.subheadline, design: .monospaced).weight(.semibold)).tracking(1)
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity).padding(.vertical, 16)
                         .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
                         .padding(.horizontal)
@@ -109,16 +112,17 @@ struct GhostCamView: View {
     private var stylePicker: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                chip("🎲 Surprise me", selected: engine.selectedStyle == nil) { engine.selectedStyle = nil }
+                chip("SURPRISE ME", selected: engine.selectedStyle == nil) { engine.selectedStyle = nil }
                 ForEach(GhostStyle.library) { s in
-                    chip("\(s.emoji) \(s.name)", selected: engine.selectedStyle?.id == s.id) { engine.selectedStyle = s }
+                    chip(s.name.uppercased(), selected: engine.selectedStyle?.id == s.id) { engine.selectedStyle = s }
                 }
             }.padding(.horizontal)
         }
     }
     private func chip(_ title: String, selected: Bool, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(title).font(.subheadline.weight(.medium)).foregroundStyle(selected ? .black : .white)
+            Text(title).font(.system(.caption, design: .monospaced).weight(.medium)).tracking(1)
+                .foregroundStyle(selected ? .black : .white)
                 .padding(.horizontal, 14).padding(.vertical, 9)
                 .background(selected ? AnyShapeStyle(.white) : AnyShapeStyle(.white.opacity(0.1)), in: Capsule())
         }
@@ -126,7 +130,7 @@ struct GhostCamView: View {
 
     private func actionButton(_ t: String, _ icon: String, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 6) { Image(systemName: icon).font(.title3); Text(t).font(.caption) }
+            VStack(spacing: 6) { Image(systemName: icon).font(.title3); Text(t.uppercased()).font(.system(.caption2, design: .monospaced)).tracking(1) }
                 .foregroundStyle(.white).frame(maxWidth: .infinity).padding(.vertical, 12)
                 .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
         }
@@ -154,7 +158,7 @@ private struct ScanningOverlay: View {
             .overlay {
                 VStack(spacing: 12) {
                     ProgressView().tint(.white)
-                    Text("scanning for spirits…").font(.caption).foregroundStyle(.white.opacity(0.8))
+                    Text("SCANNING FOR SPIRITS").font(.system(.caption, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.85))
                 }
             }
     }
@@ -166,8 +170,9 @@ private struct EmptyState: View {
             .overlay {
                 VStack(spacing: 10) {
                     Image(systemName: "camera.viewfinder").font(.system(size: 44)).foregroundStyle(.white.opacity(0.3))
-                    Text("Pick a photo of a room.\nWe'll find what's already there.").font(.callout)
-                        .multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.4))
+                    Text("PICK A PHOTO OF A ROOM\nWE'LL FIND WHAT'S ALREADY THERE")
+                        .font(.system(.caption, design: .monospaced)).tracking(1.5)
+                        .multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.4)).lineSpacing(4)
                 }
             }
     }
@@ -175,7 +180,8 @@ private struct EmptyState: View {
 
 private extension View {
     func primaryLabelStyle() -> some View {
-        self.font(.headline).foregroundStyle(.black).frame(maxWidth: .infinity).padding(.vertical, 16)
+        self.font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(2)
+            .foregroundStyle(.black).frame(maxWidth: .infinity).padding(.vertical, 16)
             .background(.white, in: RoundedRectangle(cornerRadius: 16)).padding(.horizontal)
     }
 }

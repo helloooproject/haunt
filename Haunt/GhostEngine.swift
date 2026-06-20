@@ -13,6 +13,15 @@ final class GhostEngine: ObservableObject {
     @AppStorage("ghostCount") private var ghostCount = 0
     @AppStorage("hasPro") var hasPro = false
 
+    /// Paywall gate. In DEBUG we're always unlocked so testing isn't blocked by the free limit.
+    var unlocked: Bool {
+        #if DEBUG
+        return true
+        #else
+        return hasPro
+        #endif
+    }
+
     var freeRemaining: Int { max(0, freeLimit - ghostCount) }
 
     /// Photoreal-creepy ghost prompts. NOTE: Moondraft's content filter blocks
@@ -25,7 +34,7 @@ final class GhostEngine: ObservableObject {
     private let preserve = "Do NOT change, regenerate, restyle, recolor, or replace the original photo or its background. Keep every existing pixel, the lighting, and the composition exactly as-is. Make ONLY this one addition (photoreal, matching the photo's real lighting): "
 
     func summon(from photo: UIImage) {
-        if !hasPro && freeRemaining == 0 { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "free_limit"]) ; return }
+        if !unlocked && freeRemaining == 0 { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "free_limit"]) ; return }
         errorText = nil; result = nil; isSummoning = true
         let style = selectedStyle ?? .random
         Analytics.track("ghost_summon_started", ["style": style.id, "surprise": selectedStyle == nil])
