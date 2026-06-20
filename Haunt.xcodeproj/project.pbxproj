@@ -1,0 +1,317 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */; };
+		5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */; };
+		7F989833306E77EE66FD4981 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9021D04E58D1D4892055697D /* Analytics.swift */; };
+		8CE42C9C27852DAED00D46AC /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9292BA7F128D16B6D2987E /* PaywallView.swift */; };
+		A63AB8F054E5640540AAE1CE /* MoondraftClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CFF7AA8D633323681E4900 /* MoondraftClient.swift */; };
+		F09D9423034AC8CD76E87A7D /* HauntApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostEngine.swift; sourceTree = "<group>"; };
+		2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HauntApp.swift; sourceTree = "<group>"; };
+		59CFF7AA8D633323681E4900 /* MoondraftClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoondraftClient.swift; sourceTree = "<group>"; };
+		6C9292BA7F128D16B6D2987E /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		9021D04E58D1D4892055697D /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
+		AA1283CDF60AAB55B398A995 /* Haunt.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Haunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostCamView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		E616AE1582E28447CCB26D5E = {
+			isa = PBXGroup;
+			children = (
+				E7AE50FAA1ABF029582C465C /* Haunt */,
+				F13180D85E60951C48DBAC6E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E7AE50FAA1ABF029582C465C /* Haunt */ = {
+			isa = PBXGroup;
+			children = (
+				9021D04E58D1D4892055697D /* Analytics.swift */,
+				EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */,
+				278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */,
+				2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */,
+				59CFF7AA8D633323681E4900 /* MoondraftClient.swift */,
+				6C9292BA7F128D16B6D2987E /* PaywallView.swift */,
+			);
+			path = Haunt;
+			sourceTree = "<group>";
+		};
+		F13180D85E60951C48DBAC6E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA1283CDF60AAB55B398A995 /* Haunt.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B1D13798BE97227440E7C6CF /* Haunt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B656C55B3F5CB58A134B1CA0 /* Build configuration list for PBXNativeTarget "Haunt" */;
+			buildPhases = (
+				4AA23CF8720C81E8870632BB /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Haunt;
+			packageProductDependencies = (
+			);
+			productName = Haunt;
+			productReference = AA1283CDF60AAB55B398A995 /* Haunt.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C1D26FF933A59F38CDE83A7A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B1D13798BE97227440E7C6CF = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 99E591E5BEDECEE2ED4089B7 /* Build configuration list for PBXProject "Haunt" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E616AE1582E28447CCB26D5E;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F13180D85E60951C48DBAC6E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B1D13798BE97227440E7C6CF /* Haunt */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4AA23CF8720C81E8870632BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F989833306E77EE66FD4981 /* Analytics.swift in Sources */,
+				53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */,
+				5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */,
+				F09D9423034AC8CD76E87A7D /* HauntApp.swift in Sources */,
+				A63AB8F054E5640540AAE1CE /* MoondraftClient.swift in Sources */,
+				8CE42C9C27852DAED00D46AC /* PaywallView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4E0F08B676F2AD3E877DF2B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Haunt uses your camera to scan rooms for spirits.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Haunt needs your photos to reveal the spirits hiding inside them.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		62795B2E3BF15A9F36763613 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rci.haunt;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BA5548C1CDB55B0379688B43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rci.haunt;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F4858893CEEC667D3D5916E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Haunt uses your camera to scan rooms for spirits.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Haunt needs your photos to reveal the spirits hiding inside them.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		99E591E5BEDECEE2ED4089B7 /* Build configuration list for PBXProject "Haunt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4858893CEEC667D3D5916E9 /* Debug */,
+				4E0F08B676F2AD3E877DF2B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B656C55B3F5CB58A134B1CA0 /* Build configuration list for PBXNativeTarget "Haunt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA5548C1CDB55B0379688B43 /* Debug */,
+				62795B2E3BF15A9F36763613 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C1D26FF933A59F38CDE83A7A /* Project object */;
+}

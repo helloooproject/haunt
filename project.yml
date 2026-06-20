@@ -1,0 +1,24 @@
+name: Haunt
+options:
+  bundleIdPrefix: com.rci.haunt
+  deploymentTarget:
+    iOS: "17.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""        # set your team in Xcode signing
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Haunt needs your photos to reveal the spirits hiding inside them."
+    INFOPLIST_KEY_NSCameraUsageDescription: "Haunt uses your camera to scan rooms for spirits."
+    INFOPLIST_KEY_UILaunchScreen_Generation: YES
+    INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+targets:
+  Haunt:
+    type: application
+    platform: iOS
+    sources:
+      - Haunt
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rci.haunt
