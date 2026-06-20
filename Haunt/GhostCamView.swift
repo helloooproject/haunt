@@ -13,67 +13,16 @@ struct GhostCamView: View {
 
     var body: some View {
         ZStack {
-            // Haunted backdrop: the launch art, dimmed, so the home feels possessed not empty.
+            // Haunted backdrop
             Color.black.ignoresSafeArea()
-            Image("LaunchGhost").resizable().scaledToFill().ignoresSafeArea()
-                .opacity(0.22).blur(radius: 2)
-            LinearGradient(colors: [.black.opacity(0.5), .black.opacity(0.85)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+            Image("LaunchGhost").resizable().scaledToFill().ignoresSafeArea().opacity(0.16).blur(radius: 3)
+            LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0.9)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
 
-            VStack(spacing: 12) {
-                header.padding(.top, 14)
-
-                // Middle fills remaining space; controls are pinned via safeAreaInset below.
-                Group {
-                    if engine.result != nil || sourcePhoto != nil {
-                        ZStack {
-                            if let ghost = engine.result {
-                                Image(uiImage: ghost).resizable().scaledToFit()
-                                    .clipShape(RoundedRectangle(cornerRadius: 18))
-                                    .transition(.opacity)
-                            } else if let src = sourcePhoto {
-                                Image(uiImage: src).resizable().scaledToFit()
-                                    .clipShape(RoundedRectangle(cornerRadius: 18))
-                                    .overlay { if engine.isSummoning { ScanningOverlay() } }
-                            }
-                        }
-                        .padding(.horizontal)
-                    } else {
-                        ghostGrid   // PICK YOUR GHOST — fills the home
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .safeAreaInset(edge: .bottom) {
-                VStack(spacing: 10) {
-                    if let err = engine.errorText {
-                        Text(err).font(.callout).foregroundStyle(.red.opacity(0.9))
-                            .multilineTextAlignment(.center).padding(.horizontal)
-                    }
-                    controls
-                    if !engine.unlocked {
-                        Text("\(engine.freeRemaining) FREE SUMMONS LEFT")
-                            .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.4))
-                    }
-                }
-                .padding(.top, 8).padding(.bottom, 6)
-                .background(.black.opacity(0.6))
-            }
-
-            // Crypt (gallery) button, top-right
-            VStack {
-                HStack {
-                    Spacer()
-                    Button { showGallery = true } label: {
-                        Image(systemName: "square.grid.2x2.fill").font(.system(size: 17))
-                            .foregroundStyle(.white.opacity(0.7)).padding(10)
-                            .background(.white.opacity(0.1), in: Circle())
-                    }
-                }.padding(.trailing, 16).padding(.top, 8)
-                Spacer()
-            }
+            content
 
             Vignette()
             GrainOverlay()
+            cryptButton
         }
         .preferredColorScheme(.dark)
         .sheet(isPresented: $showGallery) { GalleryView() }
@@ -88,12 +37,90 @@ struct GhostCamView: View {
         }
     }
 
-    private var header: some View {
+    // Correct pattern: ScrollView owns the content; header + bottom bar are safeAreaInsets
+    // OF the scroll/content view, so content auto-insets and nothing hides behind them.
+    @ViewBuilder private var content: some View {
+        if engine.result != nil || sourcePhoto != nil {
+            VStack {
+                Spacer(minLength: 0)
+                ZStack {
+                    if let ghost = engine.result {
+                        Image(uiImage: ghost).resizable().scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 18)).transition(.opacity)
+                    } else if let src = sourcePhoto {
+                        Image(uiImage: src).resizable().scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                            .overlay { if engine.isSummoning { ScanningOverlay() } }
+                    }
+                }.padding(.horizontal)
+                Spacer(minLength: 0)
+            }
+            .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: true) }
+            .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
+        } else {
+            ScrollView(showsIndicators: false) {
+                LazyVGrid(columns: cols, spacing: 10) {
+                    reveal(surpriseCell, index: 0)
+                    ForEach(Array(GhostStyle.library.enumerated()), id: \.element.id) { i, s in
+                        reveal(ghostThumb(s), index: i + 1)
+                    }
+                }
+                .padding(.horizontal).padding(.top, 4).padding(.bottom, 10)
+            }
+            .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: false) }
+            .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
+            .onAppear { revealed = true }
+        }
+    }
+
+    private func pinnedHeader(compact: Bool) -> some View {
         VStack(spacing: 4) {
-            Text("Haunt").font(.custom("PicNic-Regular", size: 64)).foregroundStyle(.white).flicker()
-            Text("SUMMON THE DEAD INTO YOUR PHOTOS")
-                .font(.system(.caption, design: .monospaced)).tracking(2)
-                .foregroundStyle(.white.opacity(0.4))
+            Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 40 : 52)).foregroundStyle(.white).flicker()
+            if !compact {
+                Text("PUT A GHOST IN YOUR PHOTO")
+                    .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.5))
+                Text("STEP 1 — PICK YOUR GHOST")
+                    .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.3)).padding(.top, 4)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 6).padding(.bottom, 14)
+        .background(LinearGradient(colors: [.black, .black, .black.opacity(0)], startPoint: .top, endPoint: .bottom))
+    }
+
+    private var bottomBar: some View {
+        VStack(spacing: 10) {
+            if let err = engine.errorText {
+                Text(err).font(.callout).foregroundStyle(.red.opacity(0.9)).multilineTextAlignment(.center).padding(.horizontal)
+            }
+            if engine.result == nil && sourcePhoto == nil {
+                Text("STEP 2 — ADD YOUR PHOTO TO SUMMON \(selectedName)")
+                    .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.5))
+                    .lineLimit(1).minimumScaleFactor(0.65).padding(.horizontal)
+            }
+            controls
+            if !engine.unlocked {
+                Text("\(engine.freeRemaining) FREE SUMMONS LEFT")
+                    .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.35))
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 14).padding(.bottom, 8)
+        .background(LinearGradient(colors: [.black.opacity(0), .black, .black], startPoint: .top, endPoint: .bottom))
+    }
+
+    private var selectedName: String { (engine.selectedStyle?.name ?? "a random ghost").uppercased() }
+
+    private var cryptButton: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button { showGallery = true } label: {
+                    Image(systemName: "square.grid.2x2.fill").font(.system(size: 15))
+                        .foregroundStyle(.white.opacity(0.75)).padding(9).background(.ultraThinMaterial, in: Circle())
+                }
+            }.padding(.trailing, 14).padding(.top, 6)
+            Spacer()
         }
     }
 
@@ -137,21 +164,6 @@ struct GhostCamView: View {
     }
 
     private let cols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
-
-    private var ghostGrid: some View {
-        VStack(spacing: 12) {
-            Text("PICK YOUR GHOST").font(.system(.caption, design: .monospaced)).tracking(3).foregroundStyle(.white.opacity(0.5))
-            ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: cols, spacing: 10) {
-                    reveal(surpriseCell, index: 0)
-                    ForEach(Array(GhostStyle.library.enumerated()), id: \.element.id) { i, s in
-                        reveal(ghostThumb(s), index: i + 1)
-                    }
-                }.padding(.horizontal)
-            }
-        }
-        .onAppear { revealed = true }
-    }
 
     /// Staggered "materialize" reveal — each cell fades + rises in, delayed by index.
     private func reveal<V: View>(_ view: V, index: Int) -> some View {
