@@ -74,9 +74,12 @@ struct GhostCamView: View {
                 actionButton("New photo", "photo.on.rectangle") { reset() }
             }.padding(.horizontal)
         } else if sourcePhoto != nil {
-            primaryButton(engine.isSummoning ? "Summoning…" : "👻 Summon ghost") {
-                if let s = sourcePhoto { engine.summon(from: s) }
-            }.disabled(engine.isSummoning)
+            VStack(spacing: 14) {
+                stylePicker
+                primaryButton(engine.isSummoning ? "Summoning…" : "👻 Summon ghost") {
+                    if let s = sourcePhoto { engine.summon(from: s) }
+                }.disabled(engine.isSummoning)
+            }
         } else {
             VStack(spacing: 12) {
                 if CameraPicker.isAvailable {
@@ -92,6 +95,24 @@ struct GhostCamView: View {
                         .padding(.horizontal)
                 }
             }
+        }
+    }
+
+    private var stylePicker: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                chip("🎲 Surprise me", selected: engine.selectedStyle == nil) { engine.selectedStyle = nil }
+                ForEach(GhostStyle.library) { s in
+                    chip("\(s.emoji) \(s.name)", selected: engine.selectedStyle?.id == s.id) { engine.selectedStyle = s }
+                }
+            }.padding(.horizontal)
+        }
+    }
+    private func chip(_ title: String, selected: Bool, _ action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title).font(.subheadline.weight(.medium)).foregroundStyle(selected ? .black : .white)
+                .padding(.horizontal, 14).padding(.vertical, 9)
+                .background(selected ? AnyShapeStyle(.white) : AnyShapeStyle(.white.opacity(0.1)), in: Capsule())
         }
     }
 

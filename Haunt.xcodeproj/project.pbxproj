@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C12DEDE60D8E5990EBF8017 /* GhostStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA992FEDCAA38757A4F66D1 /* GhostStyle.swift */; };
 		3B1A17B40594C7D8D2F8D714 /* PicNic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */; };
 		4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */ = {isa = PBXBuildFile; fileRef = 8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */; };
 		5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E902A076FC50510E46B41A /* CameraPicker.swift */; };
@@ -26,6 +27,7 @@
 		59CFF7AA8D633323681E4900 /* MoondraftClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoondraftClient.swift; sourceTree = "<group>"; };
 		60CF5A89810227412383BFD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6C9292BA7F128D16B6D2987E /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		7AA992FEDCAA38757A4F66D1 /* GhostStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostStyle.swift; sourceTree = "<group>"; };
 		8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */ = {isa = PBXFileReference; path = Secrets.swift.example; sourceTree = "<group>"; };
 		9021D04E58D1D4892055697D /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		A7E902A076FC50510E46B41A /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 				A7E902A076FC50510E46B41A /* CameraPicker.swift */,
 				EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */,
 				278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */,
+				7AA992FEDCAA38757A4F66D1 /* GhostStyle.swift */,
 				2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */,
 				60CF5A89810227412383BFD8 /* Info.plist */,
 				59CFF7AA8D633323681E4900 /* MoondraftClient.swift */,
@@ -153,6 +156,7 @@
 				5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */,
 				53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */,
 				5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */,
+				0C12DEDE60D8E5990EBF8017 /* GhostStyle.swift in Sources */,
 				F09D9423034AC8CD76E87A7D /* HauntApp.swift in Sources */,
 				A63AB8F054E5640540AAE1CE /* MoondraftClient.swift in Sources */,
 				8CE42C9C27852DAED00D46AC /* PaywallView.swift in Sources */,

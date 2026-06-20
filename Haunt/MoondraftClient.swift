@@ -24,9 +24,14 @@ enum GhostError: Error, LocalizedError {
 enum GhostAPI {
     static let editURL = URL(string: "https://fal.run/fal-ai/nano-banana-2/edit")!
 
-    static func summonGhost(into photo: UIImage, prompt: String) async throws -> UIImage {
+    static func summonGhost(into photo: UIImage, prompt: String, reference: UIImage? = nil) async throws -> UIImage {
         guard let jpeg = photo.jpegData(compressionQuality: 0.85) else { throw GhostError.badImage }
-        let dataURI = "data:image/jpeg;base64," + jpeg.base64EncodedString()
+        func uri(_ img: UIImage) -> String? {
+            img.jpegData(compressionQuality: 0.85).map { "data:image/jpeg;base64," + $0.base64EncodedString() }
+        }
+        // First image = the user's photo (the scene to keep). Optional second = ghost reference art.
+        var imageURLs = ["data:image/jpeg;base64," + jpeg.base64EncodedString()]
+        if let ref = reference, let refURI = uri(ref) { imageURLs.append(refURI) }
 
         var req = URLRequest(url: editURL)
         req.httpMethod = "POST"
@@ -35,7 +40,7 @@ enum GhostAPI {
         req.timeoutInterval = 90
         req.httpBody = try JSONSerialization.data(withJSONObject: [
             "prompt": prompt,
-            "image_urls": [dataURI],
+            "image_urls": imageURLs,
             "num_images": 1
         ])
 

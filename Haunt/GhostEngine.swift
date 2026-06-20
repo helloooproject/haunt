@@ -18,24 +18,21 @@ final class GhostEngine: ObservableObject {
     /// Photoreal-creepy ghost prompts. NOTE: Moondraft's content filter blocks
     /// "demonic / blood / gore / horror" wording (→ fail + auto-refund). These use
     /// "eerie / hollow-eyed / liminal / translucent" which reads creepy without tripping it.
-    // Hard rule: preserve the original photo pixel-for-pixel and ONLY insert a ghost.
-    // (nano-banana can drift/regenerate, so every prompt leads with "do not change the photo".)
-    private let preserve = "Do NOT change, regenerate, restyle, recolor, or replace the original photo or its background. Keep every existing pixel, the lighting, and the composition exactly as-is. Make ONLY this one addition: "
-    private let prompts = [
-        "insert a single translucent, pale human figure standing in the existing background — hollow eyes, faded Victorian clothing, partially see-through, eerie and unsettling. Match the photo's real lighting. Photoreal ghost composited into the untouched scene.",
-        "insert a faint ghostly apparition into the existing scene: a gaunt translucent person half-hidden in shadow, blurred and liminal, hollow dark eye sockets, desaturated. Photoreal, uncanny. Nothing else in the photo changes.",
-        "insert a pale see-through spectral figure in a corner of the existing photo — long hair over the face, drained colorless skin, slightly motion-blurred as if caught moving. Photoreal ghost, eerie. The rest of the photo stays identical."
-    ]
-    private var ghostPrompt: String { preserve + prompts.randomElement()! }
+    /// nil = "Surprise me" (random each summon). Otherwise the user's picked ghost.
+    @Published var selectedStyle: GhostStyle?
+
+    // Hard rule: preserve the original photo pixel-for-pixel and ONLY insert the ghost.
+    private let preserve = "Do NOT change, regenerate, restyle, recolor, or replace the original photo or its background. Keep every existing pixel, the lighting, and the composition exactly as-is. Make ONLY this one addition (photoreal, matching the photo's real lighting): "
 
     func summon(from photo: UIImage) {
         if !hasPro && freeRemaining == 0 { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "free_limit"]) ; return }
         errorText = nil; result = nil; isSummoning = true
-        Analytics.track("ghost_summon_started")
-        let prompt = ghostPrompt
+        let style = selectedStyle ?? .random
+        Analytics.track("ghost_summon_started", ["style": style.id, "surprise": selectedStyle == nil])
+        let prompt = preserve + style.prompt
         Task {
             do {
-                let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt)
+                let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt, reference: style.referenceImage)
                 self.result = img
                 self.ghostCount += 1
                 self.isSummoning = false
