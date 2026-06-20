@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */ = {isa = PBXBuildFile; fileRef = 8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */; };
 		53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */; };
 		5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */; };
 		7F989833306E77EE66FD4981 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9021D04E58D1D4892055697D /* Analytics.swift */; };
@@ -22,6 +23,7 @@
 		4EA67C3AD63C9D892454979E /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		59CFF7AA8D633323681E4900 /* MoondraftClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoondraftClient.swift; sourceTree = "<group>"; };
 		6C9292BA7F128D16B6D2987E /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */ = {isa = PBXFileReference; path = Secrets.swift.example; sourceTree = "<group>"; };
 		9021D04E58D1D4892055697D /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		AA1283CDF60AAB55B398A995 /* Haunt.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Haunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostCamView.swift; sourceTree = "<group>"; };
@@ -46,6 +48,7 @@
 				59CFF7AA8D633323681E4900 /* MoondraftClient.swift */,
 				6C9292BA7F128D16B6D2987E /* PaywallView.swift */,
 				4EA67C3AD63C9D892454979E /* Secrets.swift */,
+				8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */,
 			);
 			path = Haunt;
 			sourceTree = "<group>";
@@ -66,6 +69,7 @@
 			buildConfigurationList = B656C55B3F5CB58A134B1CA0 /* Build configuration list for PBXNativeTarget "Haunt" */;
 			buildPhases = (
 				4AA23CF8720C81E8870632BB /* Sources */,
+				08E2D08B3B379EDFA7E3AA42 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -110,6 +114,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		08E2D08B3B379EDFA7E3AA42 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4AA23CF8720C81E8870632BB /* Sources */ = {
