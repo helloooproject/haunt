@@ -19,26 +19,26 @@ struct GhostCamView: View {
 
             VStack(spacing: 0) {
                 header.padding(.top, 24)
-                Spacer().frame(height: 32)
+                Spacer().frame(height: 20)
 
-                ZStack {
-                    // Result > source > empty state
-                    if let ghost = engine.result {
-                        Image(uiImage: ghost).resizable().scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 18))
-                            .transition(.opacity)
-                    } else if let src = sourcePhoto {
-                        Image(uiImage: src).resizable().scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 18))
-                            .overlay { if engine.isSummoning { ScanningOverlay() } }
-                    } else {
-                        EmptyState()
+                if engine.result != nil || sourcePhoto != nil {
+                    ZStack {
+                        if let ghost = engine.result {
+                            Image(uiImage: ghost).resizable().scaledToFit()
+                                .clipShape(RoundedRectangle(cornerRadius: 18))
+                                .transition(.opacity)
+                        } else if let src = sourcePhoto {
+                            Image(uiImage: src).resizable().scaledToFit()
+                                .clipShape(RoundedRectangle(cornerRadius: 18))
+                                .overlay { if engine.isSummoning { ScanningOverlay() } }
+                        }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: 420)
+                    .padding(.horizontal)
+                    Spacer(minLength: 16)
+                } else {
+                    ghostGrid   // PICK YOUR GHOST — fills the home
                 }
-                .frame(maxWidth: .infinity, maxHeight: 420)
-                .padding(.horizontal)
-
-                Spacer(minLength: 16)   // push CTAs to the bottom (thumb reach)
 
                 if let err = engine.errorText {
                     Text(err).font(.callout).foregroundStyle(.red.opacity(0.9))
@@ -85,7 +85,7 @@ struct GhostCamView: View {
             }.padding(.horizontal)
         } else if sourcePhoto != nil {
             VStack(spacing: 14) {
-                stylePicker
+                modeToggle
                 primaryButton(engine.isSummoning ? "SUMMONING…" : "SUMMON") {
                     if let s = sourcePhoto { engine.summon(from: s) }
                 }.disabled(engine.isSummoning)
@@ -109,22 +109,63 @@ struct GhostCamView: View {
         }
     }
 
-    private var stylePicker: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                chip("SURPRISE ME", selected: engine.selectedStyle == nil) { engine.selectedStyle = nil }
-                ForEach(GhostStyle.library) { s in
-                    chip(s.name.uppercased(), selected: engine.selectedStyle?.id == s.id) { engine.selectedStyle = s }
-                }
-            }.padding(.horizontal)
+    private let cols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
+
+    private var ghostGrid: some View {
+        VStack(spacing: 12) {
+            Text("PICK YOUR GHOST").font(.system(.caption, design: .monospaced)).tracking(3).foregroundStyle(.white.opacity(0.5))
+            ScrollView(showsIndicators: false) {
+                LazyVGrid(columns: cols, spacing: 10) {
+                    surpriseCell
+                    ForEach(GhostStyle.library) { s in ghostThumb(s) }
+                }.padding(.horizontal)
+            }
         }
     }
-    private func chip(_ title: String, selected: Bool, _ action: @escaping () -> Void) -> some View {
+
+    private var surpriseCell: some View {
+        let sel = engine.selectedStyle == nil
+        return Button { engine.selectedStyle = nil } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12).fill(.white.opacity(0.06))
+                VStack(spacing: 6) {
+                    Image(systemName: "dice.fill").font(.title2)
+                    Text("SURPRISE\nME").font(.system(.caption2, design: .monospaced)).tracking(1).multilineTextAlignment(.center)
+                }.foregroundStyle(.white.opacity(0.85))
+            }
+            .aspectRatio(1, contentMode: .fill)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: sel ? 2.5 : 0))
+        }
+    }
+
+    private func ghostThumb(_ s: GhostStyle) -> some View {
+        let sel = engine.selectedStyle?.id == s.id
+        return Button { engine.selectedStyle = s } label: {
+            ZStack(alignment: .bottomLeading) {
+                if let img = s.referenceImage {
+                    Image(uiImage: img).resizable().scaledToFill()
+                } else { Color.white.opacity(0.06) }
+                LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .center, endPoint: .bottom)
+                Text(s.name.uppercased()).font(.system(size: 9, design: .monospaced)).foregroundStyle(.white).padding(6)
+            }
+            .aspectRatio(1, contentMode: .fill)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: sel ? 2.5 : 0))
+        }
+    }
+
+    private var modeToggle: some View {
+        HStack(spacing: 8) {
+            modeChip("KEEP MY ROOM", on: !engine.cinematic) { engine.cinematic = false }
+            modeChip("CINEMATIC", on: engine.cinematic) { engine.cinematic = true }
+        }
+    }
+    private func modeChip(_ t: String, on: Bool, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(title).font(.system(.caption, design: .monospaced).weight(.medium)).tracking(1)
-                .foregroundStyle(selected ? .black : .white)
-                .padding(.horizontal, 14).padding(.vertical, 9)
-                .background(selected ? AnyShapeStyle(.white) : AnyShapeStyle(.white.opacity(0.1)), in: Capsule())
+            Text(t).font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(on ? .black : .white)
+                .padding(.horizontal, 14).padding(.vertical, 8)
+                .background(on ? AnyShapeStyle(.white) : AnyShapeStyle(.white.opacity(0.12)), in: Capsule())
         }
     }
 

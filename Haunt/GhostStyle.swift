@@ -1,27 +1,30 @@
 import UIKit
 
-/// A selectable ghost the user can summon. `prompt` is the eerie description fed to
-/// nano-banana (avoids gore wording so the content filter passes). `referenceAsset`
-/// is an OPTIONAL bundled image of the ghost — when set, it's sent to the model as a
-/// second reference so the summoned ghost matches your hand-made art. Drop PNGs into
-/// the asset catalog and set the name here as you build the library.
+/// A selectable ghost. Each carries a `referenceAsset` — a bundled ghost image fed to
+/// nano-banana as a SECOND image so the summoned ghost matches the art. The engine's
+/// reference-composite prompt extracts ONLY the ghost and keeps the user's room intact.
 struct GhostStyle: Identifiable, Hashable {
     let id: String
     let name: String
-    let emoji: String
-    let prompt: String
-    var referenceAsset: String? = nil
-
-    /// Reference image loaded from the bundle/asset catalog, if any.
-    var referenceImage: UIImage? { referenceAsset.flatMap { UIImage(named: $0) } }
+    let referenceAsset: String
+    var referenceImage: UIImage? { UIImage(named: referenceAsset) }
 
     static let library: [GhostStyle] = [
-        .init(id: "victorian", name: "The Lady",    emoji: "🕯️", prompt: "insert a gaunt, ashen Victorian woman in a tattered mourning dress, hollow black eye sockets, long matted hair hanging over her face, staring directly into the camera, standing far too close, slightly translucent, dread-inducing and deeply wrong."),
-        .init(id: "shadow",    name: "Shadow",      emoji: "🌑", prompt: "insert an unnaturally tall, elongated featureless black silhouette looming in the room, faceless, limbs too long, leaning toward the camera, pure dread."),
-        .init(id: "child",     name: "The Child",   emoji: "🧸", prompt: "insert a pale hollow-eyed child standing unnaturally still and facing the camera dead-on, ashen skin, faded vintage clothes, wrong proportions, profoundly unsettling."),
-        .init(id: "crone",     name: "The Crone",   emoji: "👁️", prompt: "insert a gaunt ashen old woman lunging from the shadows toward the camera, sunken hollow eyes, mouth open in a silent scream, skeletal grasping hands, terrifying and uncanny."),
-        .init(id: "tall",      name: "The Tall One",emoji: "🚪", prompt: "insert an impossibly tall, thin pallid figure with a blank featureless face, hunched against the ceiling, watching, limbs unnaturally long, deeply frightening."),
-        .init(id: "veiled",    name: "The Veiled",  emoji: "👰", prompt: "insert a pallid figure draped in a torn translucent veil with a gaunt face pressing through the fabric, hollow eyes visible underneath, standing close and staring, dread-filled.")
+        .init(id: "g01", name: "The Watcher",   referenceAsset: "ghost_01"),
+        .init(id: "g02", name: "The Sitting",   referenceAsset: "ghost_02"),
+        .init(id: "g03", name: "The Doorway",   referenceAsset: "ghost_03"),
+        .init(id: "g04", name: "The Hall",      referenceAsset: "ghost_04"),
+        .init(id: "g05", name: "The Glow",      referenceAsset: "ghost_05"),
+        .init(id: "g06", name: "The Bedside",   referenceAsset: "ghost_06"),
+        .init(id: "g07", name: "The Static",    referenceAsset: "ghost_07"),
+        .init(id: "g08", name: "The Chair",     referenceAsset: "ghost_08"),
+        .init(id: "g09", name: "The Parlor",    referenceAsset: "ghost_09"),
+        .init(id: "g10", name: "The Skylight",  referenceAsset: "ghost_10"),
+        .init(id: "g11", name: "The Mist",      referenceAsset: "ghost_11"),
+        .init(id: "g12", name: "The Vigil",     referenceAsset: "ghost_12"),
+        .init(id: "g13", name: "The Ceiling",   referenceAsset: "ghost_13"),
+        .init(id: "g14", name: "The Threshold", referenceAsset: "ghost_14"),
+        .init(id: "g15", name: "The Corridor",  referenceAsset: "ghost_15")
     ]
 
     static var random: GhostStyle { library.randomElement()! }
