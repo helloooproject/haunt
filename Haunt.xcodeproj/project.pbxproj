@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B1A17B40594C7D8D2F8D714 /* PicNic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */; };
 		4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */ = {isa = PBXBuildFile; fileRef = 8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */; };
 		53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */; };
 		5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */; };
@@ -22,14 +23,24 @@
 		2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HauntApp.swift; sourceTree = "<group>"; };
 		4EA67C3AD63C9D892454979E /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		59CFF7AA8D633323681E4900 /* MoondraftClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoondraftClient.swift; sourceTree = "<group>"; };
+		60CF5A89810227412383BFD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6C9292BA7F128D16B6D2987E /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */ = {isa = PBXFileReference; path = Secrets.swift.example; sourceTree = "<group>"; };
 		9021D04E58D1D4892055697D /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		AA1283CDF60AAB55B398A995 /* Haunt.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Haunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostCamView.swift; sourceTree = "<group>"; };
+		F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PicNic-Regular.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		81C25568B89F0600B3532FAA /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		E616AE1582E28447CCB26D5E = {
 			isa = PBXGroup;
 			children = (
@@ -45,10 +56,12 @@
 				EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */,
 				278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */,
 				2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */,
+				60CF5A89810227412383BFD8 /* Info.plist */,
 				59CFF7AA8D633323681E4900 /* MoondraftClient.swift */,
 				6C9292BA7F128D16B6D2987E /* PaywallView.swift */,
 				4EA67C3AD63C9D892454979E /* Secrets.swift */,
 				8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */,
+				81C25568B89F0600B3532FAA /* Fonts */,
 			);
 			path = Haunt;
 			sourceTree = "<group>";
@@ -120,6 +133,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B1A17B40594C7D8D2F8D714 /* PicNic-Regular.otf in Resources */,
 				4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,11 +205,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Haunt uses your camera to scan rooms for spirits.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Haunt needs your photos to reveal the spirits hiding inside them.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -213,6 +222,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Haunt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -228,6 +238,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Haunt/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -291,11 +302,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Haunt uses your camera to scan rooms for spirits.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Haunt needs your photos to reveal the spirits hiding inside them.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;

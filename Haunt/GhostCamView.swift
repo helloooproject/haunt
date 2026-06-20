@@ -54,7 +54,7 @@ struct GhostCamView: View {
 
     private var header: some View {
         VStack(spacing: 2) {
-            Text("HAUNT").font(.system(size: 28, weight: .heavy, design: .serif)).tracking(8).foregroundStyle(.white)
+            Text("HAUNT").font(.custom("PicNic-Regular", size: 40)).tracking(6).foregroundStyle(.white)
             Text("summon the dead into your photos").font(.caption).foregroundStyle(.white.opacity(0.45))
         }
     }
