@@ -13,8 +13,9 @@ struct GhostCamView: View {
         ZStack {
             Color.black.ignoresSafeArea()
 
-            VStack(spacing: 24) {
-                header
+            VStack(spacing: 0) {
+                header.padding(.top, 24)
+                Spacer().frame(height: 32)
 
                 ZStack {
                     // Result > source > empty state
@@ -30,22 +31,25 @@ struct GhostCamView: View {
                         EmptyState()
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: 460)
+                .frame(maxWidth: .infinity, maxHeight: 420)
                 .padding(.horizontal)
+
+                Spacer(minLength: 16)   // push CTAs to the bottom (thumb reach)
 
                 if let err = engine.errorText {
                     Text(err).font(.callout).foregroundStyle(.red.opacity(0.9))
-                        .multilineTextAlignment(.center).padding(.horizontal)
+                        .multilineTextAlignment(.center).padding(.horizontal).padding(.bottom, 8)
                 }
 
                 controls
-                Spacer()
                 if !engine.hasPro {
                     Text("\(engine.freeRemaining) free summons left")
                         .font(.footnote).foregroundStyle(.white.opacity(0.4))
+                        .padding(.top, 10)
                 }
             }
-            .padding(.top, 12)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
         }
         .preferredColorScheme(.dark)
         .onChange(of: pickerItem) { _, item in loadPhoto(item) }
@@ -60,9 +64,9 @@ struct GhostCamView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 2) {
-            Text("HAUNT").font(.custom("PicNic-Regular", size: 40)).tracking(6).foregroundStyle(.white)
-            Text("summon the dead into your photos").font(.caption).foregroundStyle(.white.opacity(0.45))
+        VStack(spacing: 4) {
+            Text("Haunt").font(.custom("PicNic-Regular", size: 64)).foregroundStyle(.white)
+            Text("summon the dead into your photos").font(.subheadline).foregroundStyle(.white.opacity(0.45))
         }
     }
 
