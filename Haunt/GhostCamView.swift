@@ -115,21 +115,24 @@ struct GhostCamView: View {
                 }.disabled(engine.isSummoning)
             }
         } else {
-            VStack(spacing: 12) {
+            // One compact row: camera icon + primary "Choose a photo" — keeps CTAs above the home indicator.
+            HStack(spacing: 12) {
                 if CameraPicker.isAvailable {
                     Button { showCamera = true } label: {
-                        Label("TAKE A PHOTO", systemImage: "camera.fill").primaryLabelStyle()
+                        Image(systemName: "camera.fill").font(.headline).foregroundStyle(.black)
+                            .frame(width: 58, height: 54)
+                            .background(.white, in: RoundedRectangle(cornerRadius: 16))
                     }
                 }
                 PhotosPicker(selection: $pickerItem, matching: .images) {
                     Label("CHOOSE A PHOTO", systemImage: "photo")
-                        .font(.system(.subheadline, design: .monospaced).weight(.semibold)).tracking(1)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity).padding(.vertical, 16)
-                        .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
-                        .padding(.horizontal)
+                        .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(2)
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity).frame(height: 54)
+                        .background(.white, in: RoundedRectangle(cornerRadius: 16))
                 }
             }
+            .padding(.horizontal)
         }
     }
 
