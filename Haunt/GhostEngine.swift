@@ -18,17 +18,21 @@ final class GhostEngine: ObservableObject {
     /// Photoreal-creepy ghost prompts. NOTE: Moondraft's content filter blocks
     /// "demonic / blood / gore / horror" wording (→ fail + auto-refund). These use
     /// "eerie / hollow-eyed / liminal / translucent" which reads creepy without tripping it.
+    // Hard rule: preserve the original photo pixel-for-pixel and ONLY insert a ghost.
+    // (nano-banana can drift/regenerate, so every prompt leads with "do not change the photo".)
+    private let preserve = "Do NOT change, regenerate, restyle, recolor, or replace the original photo or its background. Keep every existing pixel, the lighting, and the composition exactly as-is. Make ONLY this one addition: "
     private let prompts = [
-        "Add a single translucent, pale human figure standing in the background of this exact photo — hollow eyes, faded Victorian clothing, partially see-through, eerie and unsettling. Keep the original room, lighting, and composition unchanged. Photoreal.",
-        "Composite a faint ghostly apparition into this real photo: a gaunt translucent person half-hidden in shadow, blurred and liminal, hollow dark eye sockets, desaturated. Do not alter the rest of the scene. Photoreal, uncanny.",
-        "Place a pale see-through spectral figure in the corner of this photograph — long hair over the face, drained colorless skin, slightly motion-blurred as if caught moving. Match the photo's real lighting. Eerie, photoreal, untouched background."
+        "insert a single translucent, pale human figure standing in the existing background — hollow eyes, faded Victorian clothing, partially see-through, eerie and unsettling. Match the photo's real lighting. Photoreal ghost composited into the untouched scene.",
+        "insert a faint ghostly apparition into the existing scene: a gaunt translucent person half-hidden in shadow, blurred and liminal, hollow dark eye sockets, desaturated. Photoreal, uncanny. Nothing else in the photo changes.",
+        "insert a pale see-through spectral figure in a corner of the existing photo — long hair over the face, drained colorless skin, slightly motion-blurred as if caught moving. Photoreal ghost, eerie. The rest of the photo stays identical."
     ]
+    private var ghostPrompt: String { preserve + prompts.randomElement()! }
 
     func summon(from photo: UIImage) {
         if !hasPro && freeRemaining == 0 { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "free_limit"]) ; return }
         errorText = nil; result = nil; isSummoning = true
         Analytics.track("ghost_summon_started")
-        let prompt = prompts.randomElement()!
+        let prompt = ghostPrompt
         Task {
             do {
                 let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt)
