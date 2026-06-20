@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3B1A17B40594C7D8D2F8D714 /* PicNic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */; };
 		4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */ = {isa = PBXBuildFile; fileRef = 8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */; };
+		5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E902A076FC50510E46B41A /* CameraPicker.swift */; };
 		53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */; };
 		5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */; };
 		7F989833306E77EE66FD4981 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9021D04E58D1D4892055697D /* Analytics.swift */; };
@@ -27,6 +28,7 @@
 		6C9292BA7F128D16B6D2987E /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */ = {isa = PBXFileReference; path = Secrets.swift.example; sourceTree = "<group>"; };
 		9021D04E58D1D4892055697D /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
+		A7E902A076FC50510E46B41A /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		AA1283CDF60AAB55B398A995 /* Haunt.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Haunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostCamView.swift; sourceTree = "<group>"; };
 		F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PicNic-Regular.otf"; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				9021D04E58D1D4892055697D /* Analytics.swift */,
+				A7E902A076FC50510E46B41A /* CameraPicker.swift */,
 				EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */,
 				278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */,
 				2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */,
@@ -105,7 +108,8 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					B1D13798BE97227440E7C6CF = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = YKQA4JQPGQ;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -146,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F989833306E77EE66FD4981 /* Analytics.swift in Sources */,
+				5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */,
 				53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */,
 				5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */,
 				F09D9423034AC8CD76E87A7D /* HauntApp.swift in Sources */,
@@ -191,10 +196,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YKQA4JQPGQ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -282,10 +288,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YKQA4JQPGQ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

@@ -7,6 +7,7 @@ struct GhostCamView: View {
     @State private var pickerItem: PhotosPickerItem?
     @State private var sourcePhoto: UIImage?
     @State private var showShare = false
+    @State private var showCamera = false
 
     var body: some View {
         ZStack {
@@ -50,6 +51,12 @@ struct GhostCamView: View {
         .onChange(of: pickerItem) { _, item in loadPhoto(item) }
         .sheet(isPresented: $engine.showPaywall) { PaywallView(engine: engine) }
         .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [img]) } }
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraPicker { img in
+                sourcePhoto = img; engine.result = nil; engine.errorText = nil
+                Analytics.track("photo_captured")
+            }.ignoresSafeArea()
+        }
     }
 
     private var header: some View {
@@ -71,8 +78,19 @@ struct GhostCamView: View {
                 if let s = sourcePhoto { engine.summon(from: s) }
             }.disabled(engine.isSummoning)
         } else {
-            PhotosPicker(selection: $pickerItem, matching: .images) {
-                Label("Choose a photo", systemImage: "photo").primaryLabelStyle()
+            VStack(spacing: 12) {
+                if CameraPicker.isAvailable {
+                    Button { showCamera = true } label: {
+                        Label("Take a photo", systemImage: "camera.fill").primaryLabelStyle()
+                    }
+                }
+                PhotosPicker(selection: $pickerItem, matching: .images) {
+                    Label("Choose a photo", systemImage: "photo")
+                        .font(.headline).foregroundStyle(.white)
+                        .frame(maxWidth: .infinity).padding(.vertical, 16)
+                        .background(.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+                        .padding(.horizontal)
+                }
             }
         }
     }
