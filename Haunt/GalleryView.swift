@@ -57,7 +57,8 @@ struct GalleryView: View {
                     .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.5))
                 HStack(spacing: 14) {
                     if let img = store.image(for: s) {
-                        ShareLink(item: Image(uiImage: img), preview: SharePreview("Haunt", image: Image(uiImage: img))) {
+                        let branded = Image(uiImage: ShareCard.brand(img))
+                        ShareLink(item: branded, preview: SharePreview("Haunt", image: branded)) {
                             Label("SHARE", systemImage: "square.and.arrow.up").galleryBtn()
                         }
                     }

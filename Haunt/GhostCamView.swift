@@ -37,7 +37,7 @@ struct GhostCamView: View {
             .sheet(isPresented: $showGallery) { GalleryView() }
         .onChange(of: pickerItem) { _, item in loadPhoto(item) }
         .sheet(isPresented: $engine.showPaywall) { PaywallView(engine: engine) }
-        .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [img]) } }
+        .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [ShareCard.brand(img)]) } }
         .fullScreenCover(isPresented: $showCamera) {
             CameraPicker { img in
                 sourcePhoto = img; engine.result = nil; engine.errorText = nil
