@@ -10,6 +10,7 @@
 		0C12DEDE60D8E5990EBF8017 /* GhostStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA992FEDCAA38757A4F66D1 /* GhostStyle.swift */; };
 		1AE959ED47B5C1D5EA011DAE /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC94D4FA181CDBD72560C176 /* RootView.swift */; };
 		2060384EEA7667D22B537587 /* SummonStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6679C656E0F4D24D91C5889 /* SummonStore.swift */; };
+		2D90CD3A9E2EF128355F42DC /* CreditStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C222422E60C97F521C18B922 /* CreditStore.swift */; };
 		3B1A17B40594C7D8D2F8D714 /* PicNic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */; };
 		4CD103E4E578F967859F77EE /* Secrets.swift.example in Resources */ = {isa = PBXBuildFile; fileRef = 8EFAC37AE8FFA8976FA46112 /* Secrets.swift.example */; };
 		5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E902A076FC50510E46B41A /* CameraPicker.swift */; };
@@ -42,6 +43,7 @@
 		A7E902A076FC50510E46B41A /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		AA1283CDF60AAB55B398A995 /* Haunt.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Haunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6679C656E0F4D24D91C5889 /* SummonStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummonStore.swift; sourceTree = "<group>"; };
+		C222422E60C97F521C18B922 /* CreditStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditStore.swift; sourceTree = "<group>"; };
 		CC94D4FA181CDBD72560C176 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostCamView.swift; sourceTree = "<group>"; };
 		F2E5AE0CEFDD2395D24BBD76 /* PicNic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PicNic-Regular.otf"; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				8C7B1FC9014670C5F7B173FA /* Assets.xcassets */,
 				A7E902A076FC50510E46B41A /* CameraPicker.swift */,
 				5ACA413F2CB184E570D2D52F /* CinematicEffects.swift */,
+				C222422E60C97F521C18B922 /* CreditStore.swift */,
 				1DDB85F53B717BB887DE63AF /* GalleryView.swift */,
 				EF658EE5BFC16A5187DE44B9 /* GhostCamView.swift */,
 				278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */,
@@ -174,6 +177,7 @@
 				7F989833306E77EE66FD4981 /* Analytics.swift in Sources */,
 				5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */,
 				8162DFA3588C08A66EABC749 /* CinematicEffects.swift in Sources */,
+				2D90CD3A9E2EF128355F42DC /* CreditStore.swift in Sources */,
 				926DA3A4193AB552AFC23CFC /* GalleryView.swift in Sources */,
 				53B19E9EDA768D6B828B1F40 /* GhostCamView.swift in Sources */,
 				5BA0F5E72F019ACF93548EBF /* GhostEngine.swift in Sources */,

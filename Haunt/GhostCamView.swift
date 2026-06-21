@@ -4,6 +4,7 @@ import PhotosUI
 /// The whole MVP loop: pick/take a photo → "scanning" → ghost render → share, with paywall gate.
 struct GhostCamView: View {
     @StateObject private var engine = GhostEngine()
+    @ObservedObject private var credits = CreditStore.shared
     @State private var pickerItem: PhotosPickerItem?
     @State private var sourcePhoto: UIImage?
     @State private var showShare = false
@@ -36,7 +37,7 @@ struct GhostCamView: View {
             .preferredColorScheme(.dark)
             .sheet(isPresented: $showGallery) { GalleryView() }
         .onChange(of: pickerItem) { _, item in loadPhoto(item) }
-        .sheet(isPresented: $engine.showPaywall) { PaywallView(engine: engine) }
+        .sheet(isPresented: $engine.showPaywall) { PaywallView() }
         .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [ShareCard.brand(img)]) } }
         .fullScreenCover(isPresented: $showCamera) {
             CameraPicker { img in
@@ -49,7 +50,9 @@ struct GhostCamView: View {
     // Correct pattern: ScrollView owns the content; header + bottom bar are safeAreaInsets
     // OF the scroll/content view, so content auto-insets and nothing hides behind them.
     @ViewBuilder private var content: some View {
-        if engine.result != nil || sourcePhoto != nil {
+        // Result, or mid-summon: show the photo/result big. Otherwise the carousel is always the picker
+        // (so "Again" returns here to pick a different ghost on the same photo).
+        if engine.result != nil || (engine.isSummoning && sourcePhoto != nil) {
             VStack {
                 Spacer(minLength: 0)
                 ZStack {
@@ -145,10 +148,8 @@ struct GhostCamView: View {
                     .lineLimit(1).minimumScaleFactor(0.65).padding(.horizontal)
             }
             controls
-            if !engine.unlocked {
-                Text("\(engine.freeRemaining) FREE SUMMONS LEFT")
-                    .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.35))
-            }
+            Text("\(credits.balance) CREDITS")
+                .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.35))
         }
         .frame(maxWidth: .infinity)
         .padding(.top, 14).padding(.bottom, 8)
@@ -164,7 +165,7 @@ struct GhostCamView: View {
                 modeToggle   // flip vibe, then "Again" re-renders in it
                 HStack(spacing: 14) {
                     actionButton("Share", "square.and.arrow.up") { showShare = true; Analytics.track("shared") }
-                    actionButton("Again", "arrow.counterclockwise") { if let s = sourcePhoto { engine.summon(from: s) } }
+                    actionButton("Change ghost", "wand.and.stars") { withAnimation { engine.result = nil } }
                     actionButton("New photo", "photo.on.rectangle") { reset() }
                 }.padding(.horizontal)
             }
@@ -199,7 +200,7 @@ struct GhostCamView: View {
 
     private var modeToggle: some View {
         HStack(spacing: 8) {
-            modeChip("KEEP MY ROOM", on: !engine.cinematic) { engine.cinematic = false }
+            modeChip("REALISTIC", on: !engine.cinematic) { engine.cinematic = false }
             modeChip("CINEMATIC", on: engine.cinematic) { engine.cinematic = true }
         }
     }

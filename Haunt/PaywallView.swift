@@ -1,65 +1,56 @@
 import SwiftUI
 import StoreKit
 
-/// One-time unlock paywall (no subscription — the audience won't sub to a toy).
-/// TODO(cody): create a non-consumable IAP in App Store Connect and set productID below.
+/// Credit-pack store. Consumables — each summon costs 1 credit (real API COGS ~$0.06).
 struct PaywallView: View {
-    @ObservedObject var engine: GhostEngine
+    @ObservedObject var credits = CreditStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var products: [Product] = []
-    @State private var buying = false
-
-    private let productID = "com.rci.haunt.unlock"   // matches the ASC non-consumable
+    @State private var buying: String?
 
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            VStack(spacing: 22) {
+            VStack(spacing: 20) {
                 Spacer()
-                Text("👻").font(.system(size: 60))
-                Text("Unlock unlimited summons").font(.title2.bold()).foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-                VStack(alignment: .leading, spacing: 10) {
-                    perk("Summon ghosts into any photo")
-                    perk("Save & share in full quality")
-                    perk("One-time purchase — yours forever")
-                }.padding(.horizontal, 40)
+                Text("👻").font(.system(size: 56))
+                Text("OUT OF SUMMONS").font(.system(.title2, design: .monospaced).weight(.bold)).tracking(2).foregroundStyle(.white)
+                Text("\(credits.balance) credits left").font(.system(.caption, design: .monospaced)).foregroundStyle(.white.opacity(0.5))
                 Spacer()
-                Button {
-                    Task { await buy() }
-                } label: {
-                    Text(buying ? "…" : (products.first.map { "Unlock — \($0.displayPrice)" } ?? "Unlock"))
-                        .font(.headline).foregroundStyle(.black).frame(maxWidth: .infinity).padding(.vertical, 16)
+
+                ForEach(products.sorted { $0.price < $1.price }, id: \.id) { p in
+                    Button { Task { await buy(p) } } label: {
+                        HStack {
+                            Text("\(CreditPack.credits(for: p.id)) SUMMONS")
+                                .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(1)
+                            Spacer()
+                            Text(buying == p.id ? "…" : p.displayPrice)
+                                .font(.system(.subheadline, design: .monospaced).weight(.bold))
+                        }
+                        .foregroundStyle(.black).padding(.horizontal, 20).frame(height: 56)
                         .background(.white, in: RoundedRectangle(cornerRadius: 16))
-                }.padding(.horizontal).disabled(buying)
-                Button("Restore Purchase") { Task { await restore() } }
-                    .font(.footnote).foregroundStyle(.white.opacity(0.6))
-                Button("Not now") { dismiss() }.font(.footnote).foregroundStyle(.white.opacity(0.35)).padding(.bottom)
+                    }
+                    .disabled(buying != nil).padding(.horizontal)
+                }
+
+                Button("Not now") { dismiss() }.font(.footnote).foregroundStyle(.white.opacity(0.35)).padding(.vertical, 8)
             }
         }
-        .task { await loadProducts() }
+        .preferredColorScheme(.dark)
+        .task { await load() }
     }
 
-    private func perk(_ t: String) -> some View {
-        HStack(spacing: 10) { Image(systemName: "checkmark.circle.fill").foregroundStyle(.white)
-            Text(t).foregroundStyle(.white.opacity(0.85)).font(.subheadline) }
+    private func load() async {
+        products = (try? await Product.products(for: CreditPack.all.map(\.id))) ?? []
     }
-
-    private func loadProducts() async {
-        products = (try? await Product.products(for: [productID])) ?? []
-    }
-    private func buy() async {
-        guard let product = products.first else { return }
-        buying = true; defer { buying = false }
+    private func buy(_ product: Product) async {
+        buying = product.id; defer { buying = nil }
         guard let result = try? await product.purchase() else { return }
-        if case .success(let verification) = result, case .verified = verification {
-            engine.hasPro = true; Analytics.track("purchased", ["product": productID]); dismiss()
-        }
-    }
-    private func restore() async {
-        try? await AppStore.sync()
-        for await ent in Transaction.currentEntitlements {
-            if case .verified(let t) = ent, t.productID == productID { engine.hasPro = true; dismiss() }
+        if case .success(let v) = result, case .verified(let t) = v {
+            credits.add(CreditPack.credits(for: product.id))
+            await t.finish()                       // consumables must be finished
+            Analytics.track("purchased", ["pack": product.id, "credits": CreditPack.credits(for: product.id)])
+            dismiss()
         }
     }
 }

@@ -41,7 +41,8 @@ enum GhostAPI {
         req.timeoutInterval = 150   // gpt-image edit runs ~30-40s
         req.httpBody = try JSONSerialization.data(withJSONObject: [
             "prompt": prompt,
-            "image_urls": imageURLs
+            "image_urls": imageURLs,
+            "quality": "medium"   // ~$0.042/img — bounds COGS (high is ~4x)
         ])
 
         let (data, resp): (Data, URLResponse)

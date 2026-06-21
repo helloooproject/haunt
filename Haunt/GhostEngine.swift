@@ -9,20 +9,8 @@ final class GhostEngine: ObservableObject {
     @Published var errorText: String?
     @Published var showPaywall = false
 
-    private let freeLimit = 2
     @AppStorage("ghostCount") private var ghostCount = 0
-    @AppStorage("hasPro") var hasPro = false
-
-    /// Paywall gate. In DEBUG we're always unlocked so testing isn't blocked by the free limit.
-    var unlocked: Bool {
-        #if DEBUG
-        return true
-        #else
-        return hasPro
-        #endif
-    }
-
-    var freeRemaining: Int { max(0, freeLimit - ghostCount) }
+    private let credits = CreditStore.shared
 
     /// Photoreal-creepy ghost prompts. NOTE: Moondraft's content filter blocks
     /// "demonic / blood / gore / horror" wording (→ fail + auto-refund). These use
@@ -35,24 +23,24 @@ final class GhostEngine: ObservableObject {
     private let composePrompt = """
     You are given two images. Image 1 is the user's real photo. Image 2 shows a ghost. \
     Composite ONLY the ghostly figure from Image 2 into Image 1 as a translucent, eerie apparition. \
-    CRITICAL: keep Image 1's room, walls, furniture, floor, lighting, colors and composition EXACTLY as they are — \
-    do NOT import the room, background, walls or floor from Image 2. Take ONLY the ghost itself. \
+    CRITICAL: keep Image 1's scene, surroundings, lighting, colors and composition EXACTLY as they are — \
+    do NOT import the setting or background from Image 2. Take ONLY the ghost itself. \
     Scale, place and light the ghost naturally to match Image 1's perspective and lighting. Photoreal, unsettling.
     """
 
-    // "Cinematic" mode: same ghost, but also grade their room into a film-horror look.
+    // "Cinematic" mode: same ghost, but also grade the user's photo into a film-horror look.
     private let cinematicPrompt = """
     You are given two images. Image 1 is the user's real photo. Image 2 shows a ghost. \
     Composite ONLY the ghostly figure from Image 2 into Image 1, and re-grade Image 1 into a dark, \
     desaturated, cinematic horror atmosphere (deep shadows, cold tones, subtle film grain, moody contrast). \
-    Keep the room recognizably the SAME room and layout as Image 1 — do not import Image 2's room — but darken it cinematically. Photoreal.
+    Keep the SAME scene and composition as Image 1 — do not import Image 2's setting — but darken it cinematically. Photoreal.
     """
 
     /// false = Keep my room (truthful), true = Cinematic (graded).
     @AppStorage("cinematic") var cinematic = false
 
     func summon(from photo: UIImage) {
-        if !unlocked && freeRemaining == 0 { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "free_limit"]) ; return }
+        guard credits.canSummon else { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "no_credits"]); return }
         errorText = nil; result = nil; isSummoning = true
         let style = selectedStyle ?? .random
         Analytics.track("ghost_summon_started", ["style": style.id, "surprise": selectedStyle == nil, "cinematic": cinematic])
@@ -63,11 +51,12 @@ final class GhostEngine: ObservableObject {
                 self.result = img
                 self.ghostCount += 1
                 self.isSummoning = false
+                self.credits.spend()          // charge ONLY on success — failed summons are free
                 SummonStore.shared.save(img, preset: style.name, mode: cinematic ? "Cinematic" : "Keep my room")
-                Analytics.track("ghost_rendered", ["count": self.ghostCount])
+                Analytics.track("ghost_rendered", ["count": self.ghostCount, "credits_left": self.credits.balance])
                 self.maybeAskForReview()      // positive moment: a ghost just appeared
             } catch {
-                self.isSummoning = false
+                self.isSummoning = false      // no credit spent on failure
                 self.errorText = (error as? LocalizedError)?.errorDescription ?? "The summon failed."
                 Analytics.track("ghost_failed", ["error": "\(error)"])
                 if case GhostError.noCredits = error { self.showPaywall = true }
