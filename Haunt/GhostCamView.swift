@@ -9,7 +9,7 @@ struct GhostCamView: View {
     @State private var showShare = false
     @State private var showCamera = false
     @State private var showGallery = false
-    @State private var revealed = false
+    @State private var carouselIndex = 0
 
     var body: some View {
         content
@@ -67,19 +67,49 @@ struct GhostCamView: View {
             .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: true) }
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
         } else {
-            ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: cols, spacing: 10) {
-                    reveal(surpriseCell, index: 0)
-                    ForEach(Array(GhostStyle.library.enumerated()), id: \.element.id) { i, s in
-                        reveal(ghostThumb(s), index: i + 1)
-                    }
+            TabView(selection: $carouselIndex) {
+                surprisePoster.tag(0)
+                ForEach(Array(GhostStyle.library.enumerated()), id: \.element.id) { i, s in
+                    ghostPoster(s).tag(i + 1)
                 }
-                .padding(.horizontal).padding(.top, 4).padding(.bottom, 10)
             }
+            .tabViewStyle(.page(indexDisplayMode: .always))
             .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: false) }
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
-            .onAppear { revealed = true }
+            .onChange(of: carouselIndex) { _, idx in
+                engine.selectedStyle = idx == 0 ? nil : GhostStyle.library[idx - 1]
+            }
         }
+    }
+
+    /// Full-bleed ghost poster (one carousel page).
+    private func ghostPoster(_ s: GhostStyle) -> some View {
+        ZStack(alignment: .bottom) {
+            if let img = s.referenceImage {
+                Image(uiImage: img).resizable().scaledToFill()
+            } else { Color.white.opacity(0.06) }
+            LinearGradient(colors: [.clear, .black.opacity(0.9)], startPoint: .center, endPoint: .bottom)
+            Text(s.name.uppercased())
+                .font(.system(.title3, design: .monospaced).weight(.bold)).tracking(3)
+                .foregroundStyle(.white).padding(.bottom, 22)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.15), lineWidth: 1))
+        .shadow(color: .black.opacity(0.6), radius: 22, y: 12)
+        .padding(.horizontal, 26).padding(.vertical, 6)
+    }
+
+    private var surprisePoster: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 22).fill(.white.opacity(0.05))
+            RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.18), style: .init(lineWidth: 1.5, dash: [8]))
+            VStack(spacing: 16) {
+                Image(systemName: "dice.fill").font(.system(size: 54))
+                Text("SURPRISE ME").font(.system(.title3, design: .monospaced).weight(.bold)).tracking(3)
+                Text("a random ghost each time").font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.5))
+            }.foregroundStyle(.white.opacity(0.85))
+        }
+        .padding(.horizontal, 26).padding(.vertical, 6)
     }
 
     private func pinnedHeader(compact: Bool) -> some View {
@@ -157,48 +187,6 @@ struct GhostCamView: View {
                 }
             }
             .padding(.horizontal)
-        }
-    }
-
-    private let cols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
-
-    /// Staggered "materialize" reveal — each cell fades + rises in, delayed by index.
-    private func reveal<V: View>(_ view: V, index: Int) -> some View {
-        view
-            .opacity(revealed ? 1 : 0)
-            .offset(y: revealed ? 0 : 14)
-            .animation(.easeOut(duration: 0.45).delay(Double(index) * 0.035), value: revealed)
-    }
-
-    private var surpriseCell: some View {
-        let sel = engine.selectedStyle == nil
-        return Button { engine.selectedStyle = nil } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12).fill(.white.opacity(0.06))
-                VStack(spacing: 6) {
-                    Image(systemName: "dice.fill").font(.title2)
-                    Text("SURPRISE\nME").font(.system(.caption2, design: .monospaced)).tracking(1).multilineTextAlignment(.center)
-                }.foregroundStyle(.white.opacity(0.85))
-            }
-            .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: sel ? 2.5 : 0))
-        }
-    }
-
-    private func ghostThumb(_ s: GhostStyle) -> some View {
-        let sel = engine.selectedStyle?.id == s.id
-        return Button { engine.selectedStyle = s } label: {
-            ZStack(alignment: .bottomLeading) {
-                if let img = s.referenceImage {
-                    Image(uiImage: img).resizable().scaledToFill()
-                } else { Color.white.opacity(0.06) }
-                LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .center, endPoint: .bottom)
-                Text(s.name.uppercased()).font(.system(size: 9, design: .monospaced)).foregroundStyle(.white).padding(6)
-            }
-            .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(.white, lineWidth: sel ? 2.5 : 0))
         }
     }
 

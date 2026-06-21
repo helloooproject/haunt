@@ -22,7 +22,8 @@ enum GhostError: Error, LocalizedError {
 }
 
 enum GhostAPI {
-    static let editURL = URL(string: "https://fal.run/fal-ai/nano-banana-2/edit")!
+    // OpenAI's image model ("Image 2" / gpt-image-1) via fal — best photoreal compositing.
+    static let editURL = URL(string: "https://fal.run/fal-ai/gpt-image-1/edit-image")!
 
     static func summonGhost(into photo: UIImage, prompt: String, reference: UIImage? = nil) async throws -> UIImage {
         guard let jpeg = photo.jpegData(compressionQuality: 0.85) else { throw GhostError.badImage }
@@ -37,11 +38,10 @@ enum GhostAPI {
         req.httpMethod = "POST"
         req.setValue("Key \(Secrets.falKey)", forHTTPHeaderField: "Authorization")
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.timeoutInterval = 90
+        req.timeoutInterval = 150   // gpt-image edit runs ~30-40s
         req.httpBody = try JSONSerialization.data(withJSONObject: [
             "prompt": prompt,
-            "image_urls": imageURLs,
-            "num_images": 1
+            "image_urls": imageURLs
         ])
 
         let (data, resp): (Data, URLResponse)
