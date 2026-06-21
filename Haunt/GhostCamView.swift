@@ -67,19 +67,27 @@ struct GhostCamView: View {
             .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: true) }
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
         } else {
+            // Content-first: only ghost posters. "Surprise me" is a shuffle action (below), never a card.
             TabView(selection: $carouselIndex) {
-                surprisePoster.tag(0)
                 ForEach(Array(GhostStyle.library.enumerated()), id: \.element.id) { i, s in
-                    ghostPoster(s).tag(i + 1)
+                    ghostPoster(s).tag(i)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: false) }
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
             .onChange(of: carouselIndex) { _, idx in
-                engine.selectedStyle = idx == 0 ? nil : GhostStyle.library[idx - 1]
+                engine.selectedStyle = GhostStyle.library[idx]
             }
+            .onAppear { engine.selectedStyle = GhostStyle.library[carouselIndex] }
         }
+    }
+
+    private func shuffle() {
+        var i = Int.random(in: 0..<GhostStyle.library.count)
+        if i == carouselIndex { i = (i + 1) % GhostStyle.library.count }   // always move
+        withAnimation(.easeInOut(duration: 0.45)) { carouselIndex = i }
+        Analytics.track("shuffle_ghost")
     }
 
     /// Full-bleed ghost poster (one carousel page).
@@ -99,17 +107,15 @@ struct GhostCamView: View {
         .padding(.horizontal, 26).padding(.vertical, 6)
     }
 
-    private var surprisePoster: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 22).fill(.white.opacity(0.05))
-            RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.18), style: .init(lineWidth: 1.5, dash: [8]))
-            VStack(spacing: 16) {
-                Image(systemName: "dice.fill").font(.system(size: 54))
-                Text("SURPRISE ME").font(.system(.title3, design: .monospaced).weight(.bold)).tracking(3)
-                Text("a random ghost each time").font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.5))
-            }.foregroundStyle(.white.opacity(0.85))
+    private var shufflePill: some View {
+        Button(action: shuffle) {
+            Label("SURPRISE ME", systemImage: "dice.fill")
+                .font(.system(.caption, design: .monospaced).weight(.semibold)).tracking(1.5)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 18).padding(.vertical, 9)
+                .background(.white.opacity(0.12), in: Capsule())
+                .overlay(Capsule().stroke(.white.opacity(0.2), lineWidth: 1))
         }
-        .padding(.horizontal, 26).padding(.vertical, 6)
     }
 
     private func pinnedHeader(compact: Bool) -> some View {
@@ -133,6 +139,7 @@ struct GhostCamView: View {
                 Text(err).font(.callout).foregroundStyle(.red.opacity(0.9)).multilineTextAlignment(.center).padding(.horizontal)
             }
             if engine.result == nil && sourcePhoto == nil {
+                shufflePill
                 Text("STEP 2 — ADD YOUR PHOTO TO SUMMON \(selectedName)")
                     .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.5))
                     .lineLimit(1).minimumScaleFactor(0.65).padding(.horizontal)
