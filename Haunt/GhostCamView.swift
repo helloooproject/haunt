@@ -126,10 +126,11 @@ struct GhostCamView: View {
                 .font(.system(.headline, design: .monospaced).weight(.bold)).tracking(3)
                 .foregroundStyle(.white).padding(.bottom, 18)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 22))
-        .overlay(RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.15), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.15), lineWidth: 1))
         .shadow(color: .black.opacity(0.6), radius: 22, y: 12)
-        .padding(.horizontal, 34).padding(.top, 12).padding(.bottom, 40)   // breathing room above the page dots
+        // Clear inset card — doesn't touch screen edges; room above the page dots.
+        .padding(.horizontal, 40).padding(.top, 16).padding(.bottom, 48)
     }
 
     private var shufflePill: some View {
@@ -146,20 +147,13 @@ struct GhostCamView: View {
     private func pinnedHeader(compact: Bool) -> some View {
         VStack(spacing: 4) {
             Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 40 : 52)).foregroundStyle(.white).flicker()
-                .onLongPressGesture {   // DEBUG: preview the jump scare without a summon
-                    #if DEBUG
-                    Haptics.gotcha(); flash = true; withAnimation(.easeOut(duration: 0.45)) { flash = false }
-                    #endif
-                }
             if !compact {
-                Text("PUT A GHOST IN YOUR PHOTO")
-                    .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.5))
-                Text("STEP 1 — PICK YOUR GHOST")
-                    .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.3)).padding(.top, 4)
+                Text("PICK A GHOST · ADD YOUR PHOTO")
+                    .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.45)).padding(.top, 2)
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.top, 6).padding(.bottom, 14)
+        .padding(.top, 6).padding(.bottom, 16)
         .background(LinearGradient(colors: [.black, .black, .black.opacity(0)], startPoint: .top, endPoint: .bottom))
     }
 
@@ -170,9 +164,6 @@ struct GhostCamView: View {
             }
             if engine.result == nil && sourcePhoto == nil {
                 shufflePill
-                Text("STEP 2 — ADD YOUR PHOTO TO SUMMON \(selectedName)")
-                    .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.5))
-                    .lineLimit(1).minimumScaleFactor(0.65).padding(.horizontal)
             }
             controls
             Text("\(credits.balance) CREDITS")
