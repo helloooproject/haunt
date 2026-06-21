@@ -25,11 +25,13 @@
 		D89217394318D82496DA01BF /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA67C3AD63C9D892454979E /* Secrets.swift */; };
 		DE6688A29C524FA65E3D315E /* ShareCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7B97BA5A32AF3796483DCF /* ShareCard.swift */; };
 		F09D9423034AC8CD76E87A7D /* HauntApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */; };
+		F14E3A445749CE78EFA5D803 /* BeforeAfterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F54E0D976D9A42964F25EE3 /* BeforeAfterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1DDB85F53B717BB887DE63AF /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		278EED78326C4C8A3AA4A1A3 /* GhostEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostEngine.swift; sourceTree = "<group>"; };
+		2F54E0D976D9A42964F25EE3 /* BeforeAfterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeAfterView.swift; sourceTree = "<group>"; };
 		2FE4DFFF4562BDE79F8775B1 /* HauntApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HauntApp.swift; sourceTree = "<group>"; };
 		4EA67C3AD63C9D892454979E /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		59CFF7AA8D633323681E4900 /* MoondraftClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoondraftClient.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 			children = (
 				9021D04E58D1D4892055697D /* Analytics.swift */,
 				8C7B1FC9014670C5F7B173FA /* Assets.xcassets */,
+				2F54E0D976D9A42964F25EE3 /* BeforeAfterView.swift */,
 				A7E902A076FC50510E46B41A /* CameraPicker.swift */,
 				5ACA413F2CB184E570D2D52F /* CinematicEffects.swift */,
 				C222422E60C97F521C18B922 /* CreditStore.swift */,
@@ -175,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F989833306E77EE66FD4981 /* Analytics.swift in Sources */,
+				F14E3A445749CE78EFA5D803 /* BeforeAfterView.swift in Sources */,
 				5055E66DA486E04A8DF91ACB /* CameraPicker.swift in Sources */,
 				8162DFA3588C08A66EABC749 /* CinematicEffects.swift in Sources */,
 				2D90CD3A9E2EF128355F42DC /* CreditStore.swift in Sources */,

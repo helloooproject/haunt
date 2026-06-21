@@ -56,7 +56,9 @@ struct GhostCamView: View {
             VStack {
                 Spacer(minLength: 0)
                 ZStack {
-                    if let ghost = engine.result {
+                    if let ghost = engine.result, let src = sourcePhoto {
+                        BeforeAfterView(before: src, after: ghost).transition(.opacity)
+                    } else if let ghost = engine.result {
                         Image(uiImage: ghost).resizable().scaledToFit()
                             .clipShape(RoundedRectangle(cornerRadius: 18)).transition(.opacity)
                     } else if let src = sourcePhoto {
