@@ -11,6 +11,7 @@ struct GhostCamView: View {
     @State private var showCamera = false
     @State private var showGallery = false
     @State private var carouselIndex = 0
+    @State private var flash = false
 
     var body: some View {
         content
@@ -27,6 +28,13 @@ struct GhostCamView: View {
             }
             .overlay { Vignette() }
             .overlay { GrainOverlay() }
+            .overlay { Color.white.opacity(flash ? 0.92 : 0).ignoresSafeArea().allowsHitTesting(false) }
+            .onChange(of: engine.result) { _, r in
+                guard r != nil else { return }
+                Haptics.gotcha()
+                flash = true
+                withAnimation(.easeOut(duration: 0.45)) { flash = false }
+            }
             .overlay(alignment: .topTrailing) {
                 Button { showGallery = true } label: {
                     Image(systemName: "square.grid.2x2.fill").font(.system(size: 15))

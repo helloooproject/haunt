@@ -57,3 +57,15 @@ struct Flicker: ViewModifier {
     }
 }
 extension View { func flicker() -> some View { modifier(Flicker()) } }
+
+/// The "gotcha" — a jump-scare jolt when a ghost lands. Haptic + (caller adds the flash).
+import UIKit
+enum Haptics {
+    static func gotcha() {
+        let heavy = UIImpactFeedbackGenerator(style: .heavy); heavy.prepare(); heavy.impactOccurred()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.09) {
+            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+        }
+    }
+    static func tap() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+}
