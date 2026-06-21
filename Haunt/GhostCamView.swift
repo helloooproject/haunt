@@ -15,44 +15,56 @@ struct GhostCamView: View {
 
     var body: some View {
         content
-            // Backgrounds belong in .background (ignoring safe area) so `content` keeps its
-            // real safe area — that's what makes safeAreaInset land below the status bar
-            // and above the home indicator.
-            .background {
-                ZStack {
-                    Color.black
-                    Image("LaunchGhost").resizable().scaledToFill().opacity(0.16).blur(radius: 3)
-                    LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0.9)], startPoint: .top, endPoint: .bottom)
-                }
-                .ignoresSafeArea()
-            }
+            .background { backdrop }
             .overlay { Vignette() }
             .overlay { GrainOverlay() }
-            .overlay { Color.white.opacity(flash ? 0.92 : 0).ignoresSafeArea().allowsHitTesting(false) }
-            .onChange(of: engine.result) { _, r in
-                guard r != nil else { return }
-                Haptics.gotcha()
-                flash = true
-                withAnimation(.easeOut(duration: 0.45)) { flash = false }
-            }
-            .overlay(alignment: .topTrailing) {
-                Button { showGallery = true } label: {
-                    Image(systemName: "square.grid.2x2.fill").font(.system(size: 15))
-                        .foregroundStyle(.white.opacity(0.75)).padding(9).background(.ultraThinMaterial, in: Circle())
-                }
-                .padding(.trailing, 14).padding(.top, 4)
-            }
+            .overlay { flashLayer }
+            .overlay(alignment: .topTrailing) { cryptButton }
+            .onChange(of: engine.result) { _, r in onResult(r) }
             .preferredColorScheme(.dark)
             .sheet(isPresented: $showGallery) { GalleryView() }
-        .onChange(of: pickerItem) { _, item in loadPhoto(item) }
-        .sheet(isPresented: $engine.showPaywall) { PaywallView() }
-        .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [ShareCard.brand(img)]) } }
-        .fullScreenCover(isPresented: $showCamera) {
-            CameraPicker { img in
-                sourcePhoto = img; engine.result = nil; engine.errorText = nil
-                Analytics.track("photo_captured")
-            }.ignoresSafeArea()
+            .onChange(of: pickerItem) { _, item in loadPhoto(item) }
+            .sheet(isPresented: $engine.showPaywall) { PaywallView() }
+            .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [ShareCard.brand(img)]) } }
+            .fullScreenCover(isPresented: $showCamera) { cameraCover }
+    }
+
+    // Background in .background (ignoring safe area) so `content` keeps its real safe area —
+    // that's what makes safeAreaInset land below the status bar / above the home indicator.
+    private var backdrop: some View {
+        ZStack {
+            Color.black
+            Image("LaunchGhost").resizable().scaledToFill().opacity(0.16).blur(radius: 3)
+            LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0.9)], startPoint: .top, endPoint: .bottom)
         }
+        .ignoresSafeArea()
+    }
+
+    private var flashLayer: some View {
+        Color.white.opacity(flash ? 0.92 : 0).ignoresSafeArea().allowsHitTesting(false)
+    }
+
+    private var cryptButton: some View {
+        Button { showGallery = true } label: {
+            Image(systemName: "square.grid.2x2.fill").font(.system(size: 15))
+                .foregroundStyle(.white.opacity(0.75)).padding(9).background(.ultraThinMaterial, in: Circle())
+        }
+        .padding(.trailing, 14).padding(.top, 4)
+    }
+
+    private var cameraCover: some View {
+        CameraPicker { img in
+            sourcePhoto = img; engine.result = nil; engine.errorText = nil
+            Analytics.track("photo_captured")
+        }.ignoresSafeArea()
+    }
+
+    /// The gotcha: flash + haptic the instant a ghost lands.
+    private func onResult(_ r: UIImage?) {
+        guard r != nil else { return }
+        Haptics.gotcha()
+        flash = true
+        withAnimation(.easeOut(duration: 0.45)) { flash = false }
     }
 
     // Correct pattern: ScrollView owns the content; header + bottom bar are safeAreaInsets
@@ -111,13 +123,13 @@ struct GhostCamView: View {
             } else { Color.white.opacity(0.06) }
             LinearGradient(colors: [.clear, .black.opacity(0.9)], startPoint: .center, endPoint: .bottom)
             Text(s.name.uppercased())
-                .font(.system(.title3, design: .monospaced).weight(.bold)).tracking(3)
-                .foregroundStyle(.white).padding(.bottom, 22)
+                .font(.system(.headline, design: .monospaced).weight(.bold)).tracking(3)
+                .foregroundStyle(.white).padding(.bottom, 18)
         }
         .clipShape(RoundedRectangle(cornerRadius: 22))
         .overlay(RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.15), lineWidth: 1))
         .shadow(color: .black.opacity(0.6), radius: 22, y: 12)
-        .padding(.horizontal, 26).padding(.vertical, 6)
+        .padding(.horizontal, 34).padding(.top, 12).padding(.bottom, 40)   // breathing room above the page dots
     }
 
     private var shufflePill: some View {
@@ -134,6 +146,11 @@ struct GhostCamView: View {
     private func pinnedHeader(compact: Bool) -> some View {
         VStack(spacing: 4) {
             Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 40 : 52)).foregroundStyle(.white).flicker()
+                .onLongPressGesture {   // DEBUG: preview the jump scare without a summon
+                    #if DEBUG
+                    Haptics.gotcha(); flash = true; withAnimation(.easeOut(duration: 0.45)) { flash = false }
+                    #endif
+                }
             if !compact {
                 Text("PUT A GHOST IN YOUR PHOTO")
                     .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.5))
