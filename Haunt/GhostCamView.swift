@@ -12,20 +12,29 @@ struct GhostCamView: View {
     @State private var revealed = false
 
     var body: some View {
-        ZStack {
-            // Haunted backdrop
-            Color.black.ignoresSafeArea()
-            Image("LaunchGhost").resizable().scaledToFill().ignoresSafeArea().opacity(0.16).blur(radius: 3)
-            LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0.9)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
-
-            content
-
-            Vignette()
-            GrainOverlay()
-            cryptButton
-        }
-        .preferredColorScheme(.dark)
-        .sheet(isPresented: $showGallery) { GalleryView() }
+        content
+            // Backgrounds belong in .background (ignoring safe area) so `content` keeps its
+            // real safe area — that's what makes safeAreaInset land below the status bar
+            // and above the home indicator.
+            .background {
+                ZStack {
+                    Color.black
+                    Image("LaunchGhost").resizable().scaledToFill().opacity(0.16).blur(radius: 3)
+                    LinearGradient(colors: [.black.opacity(0.55), .black.opacity(0.9)], startPoint: .top, endPoint: .bottom)
+                }
+                .ignoresSafeArea()
+            }
+            .overlay { Vignette() }
+            .overlay { GrainOverlay() }
+            .overlay(alignment: .topTrailing) {
+                Button { showGallery = true } label: {
+                    Image(systemName: "square.grid.2x2.fill").font(.system(size: 15))
+                        .foregroundStyle(.white.opacity(0.75)).padding(9).background(.ultraThinMaterial, in: Circle())
+                }
+                .padding(.trailing, 14).padding(.top, 4)
+            }
+            .preferredColorScheme(.dark)
+            .sheet(isPresented: $showGallery) { GalleryView() }
         .onChange(of: pickerItem) { _, item in loadPhoto(item) }
         .sheet(isPresented: $engine.showPaywall) { PaywallView(engine: engine) }
         .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [img]) } }
@@ -111,18 +120,6 @@ struct GhostCamView: View {
 
     private var selectedName: String { (engine.selectedStyle?.name ?? "a random ghost").uppercased() }
 
-    private var cryptButton: some View {
-        VStack {
-            HStack {
-                Spacer()
-                Button { showGallery = true } label: {
-                    Image(systemName: "square.grid.2x2.fill").font(.system(size: 15))
-                        .foregroundStyle(.white.opacity(0.75)).padding(9).background(.ultraThinMaterial, in: Circle())
-                }
-            }.padding(.trailing, 14).padding(.top, 6)
-            Spacer()
-        }
-    }
 
     @ViewBuilder private var controls: some View {
         if engine.result != nil {
