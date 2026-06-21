@@ -21,18 +21,20 @@ final class GhostEngine: ObservableObject {
     // Reference-composite prompt. Image 1 = the user's photo (their room). Image 2 = the chosen ghost.
     // The whole point: take ONLY the ghost from Image 2; keep their room exactly theirs.
     private let composePrompt = """
-    You are given two images. Image 1 is the user's real photo. Image 2 shows a ghost. \
-    Composite ONLY the ghostly figure from Image 2 into Image 1 as a translucent, eerie apparition. \
-    CRITICAL: keep Image 1's scene, surroundings, lighting, colors and composition EXACTLY as they are — \
-    do NOT import the setting or background from Image 2. Take ONLY the ghost itself. \
+    You are given two images. Image 1 is the user's photo. Image 2 is a SPECIFIC ghost. \
+    Place the SAME ghost from Image 2 into Image 1 — faithfully preserve its exact form, pose, draping, \
+    silhouette, glowing eyes and eerie style as seen in Image 2 — as a translucent apparition. \
+    CRITICAL: keep Image 1's scene, surroundings, lighting, colors and composition EXACTLY as they are; \
+    do NOT import Image 2's room or background. Take ONLY the ghost itself. \
     Scale, place and light the ghost naturally to match Image 1's perspective and lighting. Photoreal, unsettling.
     """
 
-    // "Cinematic" mode: same ghost, but also grade the user's photo into a film-horror look.
+    // "Cinematic" mode: same specific ghost, but also grade the user's photo into a film-horror look.
     private let cinematicPrompt = """
-    You are given two images. Image 1 is the user's real photo. Image 2 shows a ghost. \
-    Composite ONLY the ghostly figure from Image 2 into Image 1, and re-grade Image 1 into a dark, \
-    desaturated, cinematic horror atmosphere (deep shadows, cold tones, subtle film grain, moody contrast). \
+    You are given two images. Image 1 is the user's photo. Image 2 is a SPECIFIC ghost. \
+    Place the SAME ghost from Image 2 into Image 1 — faithfully preserve its exact form, pose, draping, \
+    glowing eyes and eerie style — then re-grade Image 1 into a dark, desaturated, cinematic horror \
+    atmosphere (deep shadows, cold tones, subtle film grain, moody contrast). \
     Keep the SAME scene and composition as Image 1 — do not import Image 2's setting — but darken it cinematically. Photoreal.
     """
 

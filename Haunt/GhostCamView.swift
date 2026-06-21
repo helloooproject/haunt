@@ -87,6 +87,11 @@ struct GhostCamView: View {
                             .overlay { if engine.isSummoning { ScanningOverlay() } }
                     }
                 }.padding(.horizontal)
+                if engine.result != nil, let name = engine.selectedStyle?.name {
+                    Text(name.uppercased())
+                        .font(.system(.caption, design: .monospaced).weight(.semibold)).tracking(3)
+                        .foregroundStyle(.white.opacity(0.6)).padding(.top, 12)
+                }
                 Spacer(minLength: 0)
             }
             .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: true) }
