@@ -33,7 +33,17 @@ struct PaywallView: View {
                     .disabled(buying != nil).padding(.horizontal)
                 }
 
-                Button("Not now") { dismiss() }.font(.footnote).foregroundStyle(.white.opacity(0.35)).padding(.vertical, 8)
+                Button("Not now") { dismiss() }.font(.footnote).foregroundStyle(.white.opacity(0.35)).padding(.vertical, 4)
+
+                HStack(spacing: 6) {
+                    Link("Privacy", destination: URL(string: "https://rectanglecircle.co/privacy.html")!)
+                    Text("·")
+                    Link("Terms", destination: URL(string: "https://rectanglecircle.co/terms.html")!)
+                    Text("·")
+                    Text("Credits are consumable")
+                }
+                .font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.3))
+                .padding(.bottom, 10)
             }
         }
         .preferredColorScheme(.dark)
