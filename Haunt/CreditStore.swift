@@ -18,8 +18,20 @@ final class CreditStore: ObservableObject {
         balance = d.integer(forKey: key)
     }
 
-    var canSummon: Bool { balance > 0 }
-    func spend() { guard balance > 0 else { return }; balance -= 1; d.set(balance, forKey: key) }
+    var canSummon: Bool {
+        #if DEBUG
+        return true            // never blocked while testing
+        #else
+        return balance > 0
+        #endif
+    }
+    func spend() {
+        #if DEBUG
+        return                 // don't deplete credits in DEBUG builds
+        #else
+        guard balance > 0 else { return }; balance -= 1; d.set(balance, forKey: key)
+        #endif
+    }
     func add(_ n: Int) { balance += n; d.set(balance, forKey: key) }
 }
 
