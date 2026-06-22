@@ -18,6 +18,7 @@ struct GhostCamView: View {
 
     private func makeGhostVideo() {
         guard let src = sourcePhoto, let result = engine.result else { return }
+        Haptics.gotcha()                 // a little jolt the moment they tap — the fun
         makingVideo = true
         Analytics.track("ghost_video_started")
         Task {
@@ -41,7 +42,7 @@ struct GhostCamView: View {
             .onChange(of: pickerItem) { _, item in loadPhoto(item) }
             .sheet(isPresented: $engine.showPaywall) { PaywallView() }
             .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [ShareCard.brand(img)]) } }
-            .sheet(isPresented: $showVideoShare) { if let v = videoURL { ShareSheet(items: [v]) } }
+            .sheet(isPresented: $showVideoShare) { if let v = videoURL { VideoRevealView(url: v) } }
             .fullScreenCover(isPresented: $showCamera) { cameraCover }
     }
 
@@ -57,7 +58,8 @@ struct GhostCamView: View {
     }
 
     private var flashLayer: some View {
-        Color.white.opacity(flash ? 0.92 : 0).ignoresSafeArea().allowsHitTesting(false)
+        // Soft dark shudder (not a white strobe — no seizure risk).
+        Color.black.opacity(flash ? 0.45 : 0).ignoresSafeArea().allowsHitTesting(false)
     }
 
     private var cryptButton: some View {
@@ -79,8 +81,9 @@ struct GhostCamView: View {
     private func onResult(_ r: UIImage?) {
         guard r != nil else { return }
         Haptics.gotcha()
-        flash = true
-        withAnimation(.easeOut(duration: 0.45)) { flash = false }
+        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        flash = true                                  // dim in fast…
+        withAnimation(.easeOut(duration: 0.7)) { flash = false }   // …then ease back out (a shudder)
     }
 
     // Correct pattern: ScrollView owns the content; header + bottom bar are safeAreaInsets
@@ -187,7 +190,7 @@ struct GhostCamView: View {
                 // Ghost-fade video — Realistic only (room is preserved, so only the ghost fades in).
                 if !engine.cinematic, sourcePhoto != nil {
                     Button { makeGhostVideo() } label: {
-                        Label(makingVideo ? "MAKING VIDEO…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
+                        Label(makingVideo ? "SUMMONING…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
                             .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(1.5)
                             .foregroundStyle(.black).frame(maxWidth: .infinity).frame(height: 50)
                             .background(.white, in: RoundedRectangle(cornerRadius: 14))

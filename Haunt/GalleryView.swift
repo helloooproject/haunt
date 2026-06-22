@@ -86,7 +86,7 @@ struct GalleryView: View {
                 // Animate any past Realistic haunt — special feature = a reason to come back.
                 if s.mode == "Realistic", store.originalImage(for: s) != nil {
                     Button { makeVideo(s) } label: {
-                        Label(makingVideo ? "MAKING VIDEO…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
+                        Label(makingVideo ? "SUMMONING…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
                             .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(1.5)
                             .foregroundStyle(.black).frame(maxWidth: .infinity).padding(.vertical, 14)
                             .background(.white, in: RoundedRectangle(cornerRadius: 14))
@@ -107,11 +107,12 @@ struct GalleryView: View {
             }.padding()
         }
         .preferredColorScheme(.dark)
-        .sheet(isPresented: $showVideoShare) { if let v = videoURL { ShareSheet(items: [v]) } }
+        .sheet(isPresented: $showVideoShare) { if let v = videoURL { VideoRevealView(url: v) } }
     }
 
     private func makeVideo(_ s: SavedSummon) {
         guard let haunted = store.image(for: s), let orig = store.originalImage(for: s) else { return }
+        Haptics.gotcha()
         makingVideo = true
         Analytics.track("ghost_video_started", ["from": "crypt"])
         Task {

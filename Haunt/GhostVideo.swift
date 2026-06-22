@@ -7,8 +7,8 @@ enum GhostVideo {
     static func makeFade(original: UIImage, haunted: UIImage, duration: Double = 4.0, fps: Int = 24) async -> URL? {
         let size = cappedEvenSize(haunted.size, maxDim: 720)
         guard size.width >= 2, size.height >= 2,
-              let before = render(original, to: size)?.cgImage,
-              let after = render(haunted, to: size)?.cgImage else { return nil }
+              let before = render(original, to: size),
+              let after = render(haunted, to: size) else { return nil }
 
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("haunt_\(UUID().uuidString).mp4")
         try? FileManager.default.removeItem(at: url)
@@ -54,10 +54,12 @@ enum GhostVideo {
                                           bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
                                           space: CGColorSpaceCreateDeviceRGB(),
                                           bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else { return false }
+                // Canonical recipe: flip the context, then draw with UIImage.draw (UIKit, top-left).
                 ctx.translateBy(x: 0, y: size.height); ctx.scaleBy(x: 1, y: -1)
-                ctx.draw(before, in: rect)                 // original underneath
-                ctx.setAlpha(fadeAlpha(Double(i) / Double(total - 1)))
-                ctx.draw(after, in: rect)                  // haunted fades in (ghost materializes)
+                UIGraphicsPushContext(ctx)
+                before.draw(in: rect)                       // original underneath
+                after.draw(in: rect, blendMode: .normal, alpha: fadeAlpha(Double(i) / Double(total - 1)))  // haunted fades in
+                UIGraphicsPopContext()
                 return adaptor.append(buffer, withPresentationTime: CMTime(value: CMTimeValue(i), timescale: CMTimeScale(fps)))
             }
             if !appended { ok = false; break }
