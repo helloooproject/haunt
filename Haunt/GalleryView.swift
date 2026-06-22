@@ -6,6 +6,9 @@ struct GalleryView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selected: SavedSummon?
     @State private var newestFirst = true
+    @State private var makingVideo = false
+    @State private var videoURL: URL?
+    @State private var showVideoShare = false
     private let cols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
 
     private var displayed: [SavedSummon] {
@@ -19,18 +22,19 @@ struct GalleryView: View {
                 if store.items.isEmpty {
                     VStack(spacing: 10) {
                         Image(systemName: "moon.stars").font(.system(size: 40)).foregroundStyle(.white.opacity(0.3))
-                        Text("THE CRYPT IS EMPTY").font(.system(.caption, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.4))
-                        Text("Summoned ghosts are saved here.").font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.25))
+                        Text("NO HAUNTS YET").font(.system(.caption, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.4))
+                        Text("Your summoned ghosts are saved here.").font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.25))
                     }
                 } else {
                     ScrollView {
-                        LazyVGrid(columns: cols, spacing: 10) {
+                        LazyVGrid(columns: cols, spacing: 14) {
                             ForEach(displayed) { s in cell(s).onTapGesture { selected = s } }
-                        }.padding()
+                        }
+                        .padding(.horizontal, 18).padding(.top, 12).padding(.bottom, 28)
                     }
                 }
             }
-            .navigationTitle("The Crypt")
+            .navigationTitle("My Haunts")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
@@ -70,6 +74,17 @@ struct GalleryView: View {
                 }
                 Text("\(s.preset.uppercased())  ·  \(s.mode.uppercased())")
                     .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.5))
+
+                // Animate any past Realistic haunt — special feature = a reason to come back.
+                if s.mode == "Realistic", store.originalImage(for: s) != nil {
+                    Button { makeVideo(s) } label: {
+                        Label(makingVideo ? "MAKING VIDEO…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
+                            .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(1.5)
+                            .foregroundStyle(.black).frame(maxWidth: .infinity).padding(.vertical, 14)
+                            .background(.white, in: RoundedRectangle(cornerRadius: 14))
+                    }.disabled(makingVideo).padding(.horizontal)
+                }
+
                 HStack(spacing: 14) {
                     if let img = store.image(for: s) {
                         let branded = Image(uiImage: ShareCard.brand(img))
@@ -82,7 +97,20 @@ struct GalleryView: View {
                     }
                 }.padding(.horizontal)
             }.padding()
-        }.preferredColorScheme(.dark)
+        }
+        .preferredColorScheme(.dark)
+        .sheet(isPresented: $showVideoShare) { if let v = videoURL { ShareSheet(items: [v]) } }
+    }
+
+    private func makeVideo(_ s: SavedSummon) {
+        guard let haunted = store.image(for: s), let orig = store.originalImage(for: s) else { return }
+        makingVideo = true
+        Analytics.track("ghost_video_started", ["from": "crypt"])
+        Task {
+            let url = await GhostVideo.makeFade(original: orig, haunted: haunted)
+            makingVideo = false
+            if let url { videoURL = url; showVideoShare = true; Analytics.track("ghost_video_made", ["from": "crypt"]) }
+        }
     }
 }
 
