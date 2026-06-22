@@ -22,8 +22,9 @@ enum GhostError: Error, LocalizedError {
 }
 
 enum GhostAPI {
-    // OpenAI's image model ("Image 2" / gpt-image-1) via fal — best photoreal compositing.
-    static let editURL = URL(string: "https://fal.run/fal-ai/gpt-image-1/edit-image")!
+    // Calls the Haunt proxy (Railway), which holds the fal key server-side and forwards to
+    // OpenAI gpt-image-1 edit. The fal key is NEVER in the app binary.
+    static let editURL = URL(string: Secrets.proxyURL)!
 
     static func summonGhost(into photo: UIImage, prompt: String, reference: UIImage? = nil) async throws -> UIImage {
         guard let jpeg = photo.jpegData(compressionQuality: 0.85) else { throw GhostError.badImage }
@@ -36,13 +37,13 @@ enum GhostAPI {
 
         var req = URLRequest(url: editURL)
         req.httpMethod = "POST"
-        req.setValue("Key \(Secrets.falKey)", forHTTPHeaderField: "Authorization")
+        req.setValue(Secrets.appSecret, forHTTPHeaderField: "x-haunt-key")   // proxy gate, not the fal key
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.timeoutInterval = 150   // gpt-image edit runs ~30-40s
         req.httpBody = try JSONSerialization.data(withJSONObject: [
             "prompt": prompt,
-            "image_urls": imageURLs,
-            "quality": "medium"   // ~$0.042/img — bounds COGS (high is ~4x)
+            "image_urls": imageURLs
+            // quality ("medium") is pinned server-side by the proxy — client can't request the expensive tier
         ])
 
         let (data, resp): (Data, URLResponse)
