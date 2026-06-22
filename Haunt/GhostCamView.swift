@@ -12,6 +12,20 @@ struct GhostCamView: View {
     @State private var showGallery = false
     @State private var carouselIndex = 0
     @State private var flash = false
+    @State private var makingVideo = false
+    @State private var videoURL: URL?
+    @State private var showVideoShare = false
+
+    private func makeGhostVideo() {
+        guard let src = sourcePhoto, let result = engine.result else { return }
+        makingVideo = true
+        Analytics.track("ghost_video_started")
+        Task {
+            let url = await GhostVideo.makeFade(original: src, haunted: result)
+            makingVideo = false
+            if let url { videoURL = url; showVideoShare = true; Analytics.track("ghost_video_made") }
+        }
+    }
 
     var body: some View {
         content
@@ -26,6 +40,7 @@ struct GhostCamView: View {
             .onChange(of: pickerItem) { _, item in loadPhoto(item) }
             .sheet(isPresented: $engine.showPaywall) { PaywallView() }
             .sheet(isPresented: $showShare) { if let img = engine.result { ShareSheet(items: [ShareCard.brand(img)]) } }
+            .sheet(isPresented: $showVideoShare) { if let v = videoURL { ShareSheet(items: [v]) } }
             .fullScreenCover(isPresented: $showCamera) { cameraCover }
     }
 
@@ -120,22 +135,26 @@ struct GhostCamView: View {
         Analytics.track("shuffle_ghost")
     }
 
-    /// Full-bleed ghost poster (one carousel page).
+    /// Ghost poster as a centered, clearly-inset card (aspect-fit so it never touches the edges).
     private func ghostPoster(_ s: GhostStyle) -> some View {
-        ZStack(alignment: .bottom) {
-            if let img = s.referenceImage {
-                Image(uiImage: img).resizable().scaledToFill()
-            } else { Color.white.opacity(0.06) }
-            LinearGradient(colors: [.clear, .black.opacity(0.9)], startPoint: .center, endPoint: .bottom)
-            Text(s.name.uppercased())
-                .font(.system(.headline, design: .monospaced).weight(.bold)).tracking(3)
-                .foregroundStyle(.white).padding(.bottom, 18)
+        VStack {
+            Spacer(minLength: 0)
+            ZStack(alignment: .bottom) {
+                if let img = s.referenceImage {
+                    Image(uiImage: img).resizable().scaledToFill()
+                } else { Color.white.opacity(0.06) }
+                LinearGradient(colors: [.clear, .black.opacity(0.9)], startPoint: .center, endPoint: .bottom)
+                Text(s.name.uppercased())
+                    .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(3)
+                    .foregroundStyle(.white).padding(.bottom, 16)
+            }
+            .aspectRatio(3.0/4.0, contentMode: .fit)
+            .clipShape(RoundedRectangle(cornerRadius: 24))
+            .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.15), lineWidth: 1))
+            .shadow(color: .black.opacity(0.6), radius: 22, y: 12)
+            Spacer(minLength: 0)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 24))
-        .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.15), lineWidth: 1))
-        .shadow(color: .black.opacity(0.6), radius: 22, y: 12)
-        // Clear inset card — doesn't touch screen edges; room above the page dots.
-        .padding(.horizontal, 40).padding(.top, 16).padding(.bottom, 48)
+        .padding(.horizontal, 52)   // clear margins — card floats, never touches edges
     }
 
     private var shufflePill: some View {
@@ -151,14 +170,14 @@ struct GhostCamView: View {
 
     private func pinnedHeader(compact: Bool) -> some View {
         VStack(spacing: 4) {
-            Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 40 : 52)).foregroundStyle(.white).flicker()
+            Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 38 : 46)).foregroundStyle(.white).flicker()
             if !compact {
                 Text("PICK A GHOST · ADD YOUR PHOTO")
-                    .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.45)).padding(.top, 2)
+                    .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.4)).padding(.top, 3)
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.top, 6).padding(.bottom, 16)
+        .padding(.top, 4).padding(.bottom, 12)
         .background(LinearGradient(colors: [.black, .black, .black.opacity(0)], startPoint: .top, endPoint: .bottom))
     }
 
@@ -185,7 +204,15 @@ struct GhostCamView: View {
     @ViewBuilder private var controls: some View {
         if engine.result != nil {
             VStack(spacing: 12) {
-                modeToggle   // flip vibe, then "Again" re-renders in it
+                // Ghost-fade video — Realistic only (room is preserved, so only the ghost fades in).
+                if !engine.cinematic, sourcePhoto != nil {
+                    Button { makeGhostVideo() } label: {
+                        Label(makingVideo ? "MAKING VIDEO…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
+                            .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(1.5)
+                            .foregroundStyle(.black).frame(maxWidth: .infinity).frame(height: 50)
+                            .background(.white, in: RoundedRectangle(cornerRadius: 14))
+                    }.disabled(makingVideo).padding(.horizontal)
+                }
                 HStack(spacing: 14) {
                     actionButton("Share", "square.and.arrow.up") { showShare = true; Analytics.track("shared") }
                     actionButton("Change ghost", "wand.and.stars") { withAnimation { engine.result = nil } }

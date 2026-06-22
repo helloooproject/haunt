@@ -5,7 +5,13 @@ struct GalleryView: View {
     @ObservedObject var store = SummonStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var selected: SavedSummon?
+    @State private var showOriginal = false   // false = Haunted, true = Original
+    @State private var newestFirst = true
     private let cols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
+
+    private var displayed: [SavedSummon] {
+        store.items.sorted { newestFirst ? $0.date > $1.date : $0.date < $1.date }
+    }
 
     var body: some View {
         NavigationStack {
@@ -18,10 +24,13 @@ struct GalleryView: View {
                         Text("Summoned ghosts are saved here.").font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.25))
                     }
                 } else {
-                    ScrollView {
-                        LazyVGrid(columns: cols, spacing: 10) {
-                            ForEach(store.items) { s in cell(s).onTapGesture { selected = s } }
-                        }.padding()
+                    VStack(spacing: 0) {
+                        filterBar
+                        ScrollView {
+                            LazyVGrid(columns: cols, spacing: 10) {
+                                ForEach(displayed) { s in cell(s).onTapGesture { selected = s } }
+                            }.padding()
+                        }
                     }
                 }
             }
@@ -34,13 +43,33 @@ struct GalleryView: View {
         }
     }
 
+    private var filterBar: some View {
+        HStack(spacing: 10) {
+            Picker("", selection: $showOriginal) {
+                Text("HAUNTED").tag(false)
+                Text("ORIGINAL").tag(true)
+            }.pickerStyle(.segmented).frame(maxWidth: 220)
+            Spacer()
+            Button { newestFirst.toggle() } label: {
+                Label(newestFirst ? "NEW" : "OLD", systemImage: "arrow.up.arrow.down")
+                    .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.7))
+            }
+        }
+        .padding(.horizontal).padding(.bottom, 8)
+    }
+
+    private func cellImage(_ s: SavedSummon) -> UIImage? {
+        showOriginal ? (store.originalImage(for: s) ?? store.image(for: s)) : store.image(for: s)
+    }
+
     private func cell(_ s: SavedSummon) -> some View {
         ZStack(alignment: .bottomLeading) {
-            if let img = store.image(for: s) {
+            if let img = cellImage(s) {
                 Image(uiImage: img).resizable().scaledToFill()
             } else { Color.white.opacity(0.06) }
             LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .center, endPoint: .bottom)
-            Text(s.preset.uppercased()).font(.system(size: 10, design: .monospaced)).foregroundStyle(.white).padding(8)
+            Text(showOriginal ? "ORIGINAL" : s.preset.uppercased())
+                .font(.system(size: 10, design: .monospaced)).foregroundStyle(.white).padding(8)
         }
         .aspectRatio(0.8, contentMode: .fill)
         .clipShape(RoundedRectangle(cornerRadius: 12))

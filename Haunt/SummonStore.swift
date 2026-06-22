@@ -3,9 +3,10 @@ import UIKit
 /// One saved summon: the rendered image (on disk) + which ghost made it.
 struct SavedSummon: Identifiable, Codable, Hashable {
     let id: String
-    let file: String        // filename in the summons dir
-    let preset: String      // ghost name used
-    let mode: String        // "Keep my room" / "Cinematic"
+    let file: String            // rendered (haunted) image filename
+    var originalFile: String?   // the user's original photo (nil for older saves)
+    let preset: String          // ghost name used
+    let mode: String            // "Realistic" / "Cinematic"
     let date: Date
 }
 
@@ -27,18 +28,28 @@ final class SummonStore: ObservableObject {
     }
 
     func image(for s: SavedSummon) -> UIImage? { UIImage(contentsOfFile: dir.appendingPathComponent(s.file).path) }
+    func originalImage(for s: SavedSummon) -> UIImage? {
+        guard let f = s.originalFile else { return nil }
+        return UIImage(contentsOfFile: dir.appendingPathComponent(f).path)
+    }
 
-    func save(_ image: UIImage, preset: String, mode: String) {
+    func save(_ image: UIImage, original: UIImage?, preset: String, mode: String) {
         guard let data = image.jpegData(compressionQuality: 0.92) else { return }
         let id = UUID().uuidString
         let file = "\(id).jpg"
         try? data.write(to: dir.appendingPathComponent(file))
-        items.insert(SavedSummon(id: id, file: file, preset: preset, mode: mode, date: Date()), at: 0)
+        var origFile: String? = nil
+        if let original, let odata = original.jpegData(compressionQuality: 0.9) {
+            origFile = "\(id)_orig.jpg"
+            try? odata.write(to: dir.appendingPathComponent(origFile!))
+        }
+        items.insert(SavedSummon(id: id, file: file, originalFile: origFile, preset: preset, mode: mode, date: Date()), at: 0)
         persist()
     }
 
     func delete(_ s: SavedSummon) {
         try? FileManager.default.removeItem(at: dir.appendingPathComponent(s.file))
+        if let f = s.originalFile { try? FileManager.default.removeItem(at: dir.appendingPathComponent(f)) }
         items.removeAll { $0.id == s.id }
         persist()
     }

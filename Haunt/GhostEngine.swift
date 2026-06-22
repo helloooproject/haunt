@@ -21,21 +21,23 @@ final class GhostEngine: ObservableObject {
     // Reference-composite prompt. Image 1 = the user's photo (their room). Image 2 = the chosen ghost.
     // The whole point: take ONLY the ghost from Image 2; keep their room exactly theirs.
     private let composePrompt = """
-    You are given two images. Image 1 is the user's photo. Image 2 is a SPECIFIC ghost. \
-    Place the SAME ghost from Image 2 into Image 1 — faithfully preserve its exact form, pose, draping, \
-    silhouette, glowing eyes and eerie style as seen in Image 2 — as a translucent apparition. \
-    CRITICAL: keep Image 1's scene, surroundings, lighting, colors and composition EXACTLY as they are; \
-    do NOT import Image 2's room or background. Take ONLY the ghost itself. \
-    Scale, place and light the ghost naturally to match Image 1's perspective and lighting. Photoreal, unsettling.
+    Image 1 is the user's real photo. Image 2 shows a SPECIFIC ghost figure. \
+    Insert that EXACT ghost (same form, pose, draped sheet, glowing eyes, eerie style) standing inside Image 1's space \
+    as if physically present: its base in contact with the floor, a realistic soft cast shadow, correct human scale \
+    relative to the furniture, partially occluded by any objects in front of it, and lit by the room's existing light sources. \
+    Make it semi-transparent and ghostly yet solid enough to read as a real presence. \
+    Keep Image 1's room, furniture, walls, lighting, colors and composition EXACTLY unchanged — \
+    do not import anything from Image 2's background. Photoreal, unsettling, no text or watermark.
     """
 
-    // "Cinematic" mode: same specific ghost, but also grade the user's photo into a film-horror look.
+    // "Cinematic" mode: same grounded ghost, then grade the whole scene into a film-horror look.
     private let cinematicPrompt = """
-    You are given two images. Image 1 is the user's photo. Image 2 is a SPECIFIC ghost. \
-    Place the SAME ghost from Image 2 into Image 1 — faithfully preserve its exact form, pose, draping, \
-    glowing eyes and eerie style — then re-grade Image 1 into a dark, desaturated, cinematic horror \
-    atmosphere (deep shadows, cold tones, subtle film grain, moody contrast). \
-    Keep the SAME scene and composition as Image 1 — do not import Image 2's setting — but darken it cinematically. Photoreal.
+    Image 1 is the user's real photo. Image 2 shows a SPECIFIC ghost figure. \
+    Insert that EXACT ghost (same form, pose, draped sheet, glowing eyes) standing inside Image 1's space as if physically \
+    present: base in contact with the floor, realistic cast shadow, correct human scale, lit by the scene. \
+    Then re-grade the whole image into a dark, desaturated, cinematic horror atmosphere (deep shadows, cold tones, \
+    subtle film grain, moody contrast). Keep the SAME scene and composition as Image 1 — do not import Image 2's setting. \
+    Photoreal, no text or watermark.
     """
 
     /// false = Keep my room (truthful), true = Cinematic (graded).
@@ -54,7 +56,7 @@ final class GhostEngine: ObservableObject {
                 self.ghostCount += 1
                 self.isSummoning = false
                 self.credits.spend()          // charge ONLY on success — failed summons are free
-                SummonStore.shared.save(img, preset: style.name, mode: cinematic ? "Cinematic" : "Keep my room")
+                SummonStore.shared.save(img, original: photo, preset: style.name, mode: cinematic ? "Cinematic" : "Realistic")
                 Analytics.track("ghost_rendered", ["count": self.ghostCount, "credits_left": self.credits.balance])
                 self.maybeAskForReview()      // positive moment: a ghost just appeared
             } catch {
