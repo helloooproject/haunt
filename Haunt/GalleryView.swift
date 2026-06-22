@@ -9,6 +9,7 @@ struct GalleryView: View {
     @State private var makingVideo = false
     @State private var videoURL: URL?
     @State private var showVideoShare = false
+    @State private var showFeedback = false
     private let cols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
 
     private var displayed: [SavedSummon] {
@@ -43,10 +44,16 @@ struct GalleryView: View {
                         Label(newestFirst ? "Newest" : "Oldest", systemImage: "arrow.up.arrow.down").foregroundStyle(.white)
                     }
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showFeedback = true } label: {
+                        Image(systemName: "bubble.left").foregroundStyle(.white)
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() }.foregroundStyle(.white) }
             }
             .preferredColorScheme(.dark)
             .sheet(item: $selected) { s in detail(s) }
+            .sheet(isPresented: $showFeedback) { FeedbackView() }
         }
     }
 
