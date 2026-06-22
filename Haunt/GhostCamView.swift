@@ -128,13 +128,6 @@ struct GhostCamView: View {
         }
     }
 
-    private func shuffle() {
-        var i = Int.random(in: 0..<GhostStyle.library.count)
-        if i == carouselIndex { i = (i + 1) % GhostStyle.library.count }   // always move
-        withAnimation(.easeInOut(duration: 0.45)) { carouselIndex = i }
-        Analytics.track("shuffle_ghost")
-    }
-
     /// Ghost poster as a centered, clearly-inset card (aspect-fit so it never touches the edges).
     private func ghostPoster(_ s: GhostStyle) -> some View {
         VStack {
@@ -157,17 +150,6 @@ struct GhostCamView: View {
         .padding(.horizontal, 52)   // clear margins — card floats, never touches edges
     }
 
-    private var shufflePill: some View {
-        Button(action: shuffle) {
-            Label("SURPRISE ME", systemImage: "dice.fill")
-                .font(.system(.caption, design: .monospaced).weight(.semibold)).tracking(1.5)
-                .foregroundStyle(.white)
-                .padding(.horizontal, 18).padding(.vertical, 9)
-                .background(.white.opacity(0.12), in: Capsule())
-                .overlay(Capsule().stroke(.white.opacity(0.2), lineWidth: 1))
-        }
-    }
-
     private func pinnedHeader(compact: Bool) -> some View {
         VStack(spacing: 4) {
             Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 38 : 46)).foregroundStyle(.white).flicker()
@@ -185,9 +167,6 @@ struct GhostCamView: View {
         VStack(spacing: 10) {
             if let err = engine.errorText {
                 Text(err).font(.callout).foregroundStyle(.red.opacity(0.9)).multilineTextAlignment(.center).padding(.horizontal)
-            }
-            if engine.result == nil && sourcePhoto == nil {
-                shufflePill
             }
             controls
             Text("\(credits.balance) CREDITS")

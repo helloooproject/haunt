@@ -5,7 +5,6 @@ struct GalleryView: View {
     @ObservedObject var store = SummonStore.shared
     @Environment(\.dismiss) private var dismiss
     @State private var selected: SavedSummon?
-    @State private var showOriginal = false   // false = Haunted, true = Original
     @State private var newestFirst = true
     private let cols = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
 
@@ -24,51 +23,36 @@ struct GalleryView: View {
                         Text("Summoned ghosts are saved here.").font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.25))
                     }
                 } else {
-                    VStack(spacing: 0) {
-                        filterBar
-                        ScrollView {
-                            LazyVGrid(columns: cols, spacing: 10) {
-                                ForEach(displayed) { s in cell(s).onTapGesture { selected = s } }
-                            }.padding()
-                        }
+                    ScrollView {
+                        LazyVGrid(columns: cols, spacing: 10) {
+                            ForEach(displayed) { s in cell(s).onTapGesture { selected = s } }
+                        }.padding()
                     }
                 }
             }
             .navigationTitle("The Crypt")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() }.foregroundStyle(.white) } }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { newestFirst.toggle() } label: {
+                        Label(newestFirst ? "Newest" : "Oldest", systemImage: "arrow.up.arrow.down").foregroundStyle(.white)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() }.foregroundStyle(.white) }
+            }
             .preferredColorScheme(.dark)
             .sheet(item: $selected) { s in detail(s) }
         }
     }
 
-    private var filterBar: some View {
-        HStack(spacing: 10) {
-            Picker("", selection: $showOriginal) {
-                Text("HAUNTED").tag(false)
-                Text("ORIGINAL").tag(true)
-            }.pickerStyle(.segmented).frame(maxWidth: 220)
-            Spacer()
-            Button { newestFirst.toggle() } label: {
-                Label(newestFirst ? "NEW" : "OLD", systemImage: "arrow.up.arrow.down")
-                    .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.7))
-            }
-        }
-        .padding(.horizontal).padding(.bottom, 8)
-    }
-
-    private func cellImage(_ s: SavedSummon) -> UIImage? {
-        showOriginal ? (store.originalImage(for: s) ?? store.image(for: s)) : store.image(for: s)
-    }
-
     private func cell(_ s: SavedSummon) -> some View {
         ZStack(alignment: .bottomLeading) {
-            if let img = cellImage(s) {
+            if let img = store.image(for: s) {
                 Image(uiImage: img).resizable().scaledToFill()
             } else { Color.white.opacity(0.06) }
             LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .center, endPoint: .bottom)
-            Text(showOriginal ? "ORIGINAL" : s.preset.uppercased())
+            Text(s.preset.uppercased())
                 .font(.system(size: 10, design: .monospaced)).foregroundStyle(.white).padding(8)
         }
         .aspectRatio(0.8, contentMode: .fill)
@@ -79,7 +63,9 @@ struct GalleryView: View {
         ZStack {
             Color.black.ignoresSafeArea()
             VStack(spacing: 16) {
-                if let img = store.image(for: s) {
+                if let img = store.image(for: s), let orig = store.originalImage(for: s) {
+                    BeforeAfterView(before: orig, after: img)   // drag to compare original ↔ haunted
+                } else if let img = store.image(for: s) {
                     Image(uiImage: img).resizable().scaledToFit().clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 Text("\(s.preset.uppercased())  ·  \(s.mode.uppercased())")
