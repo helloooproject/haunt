@@ -30,25 +30,12 @@ final class GhostEngine: ObservableObject {
     Keep the room's layout, furniture and lighting recognizable. Photoreal, deeply unsettling, no text or watermark.
     """
 
-    // "Cinematic" mode: hidden ghost + full horror-film grade.
-    private let cinematicPrompt = """
-    Image 1 is the user's real photo. Image 2 shows a specific ghost. Add that EXACT ghost to Image 1 like an \
-    apparition caught on camera — NOT centered, NOT posing: hidden off to the side, in the background, in a doorway, \
-    behind furniture, reflected in a window, or half-out of frame, easy to miss then unmistakable. Then grade the \
-    whole image like a horror film / found-footage still: crushed blacks, sickly desaturated teal-green pallor, \
-    heavy film grain, strong vignette, a single cold low-key light, faint haze. The ghost partly swallowed by shadow. \
-    Keep the same room layout. Photoreal cinematic horror, no text or watermark.
-    """
-
-    /// false = Keep my room (truthful), true = Cinematic (graded).
-    @AppStorage("cinematic") var cinematic = false
-
     func summon(from photo: UIImage) {
         guard credits.canSummon else { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "no_credits"]); return }
         errorText = nil; result = nil; isSummoning = true
         let style = selectedStyle ?? .random
-        Analytics.track("ghost_summon_started", ["style": style.id, "surprise": selectedStyle == nil, "cinematic": cinematic])
-        let prompt = cinematic ? cinematicPrompt : composePrompt
+        Analytics.track("ghost_summon_started", ["style": style.id, "surprise": selectedStyle == nil])
+        let prompt = composePrompt
         Task {
             do {
                 let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt, reference: style.referenceImage)
@@ -56,7 +43,7 @@ final class GhostEngine: ObservableObject {
                 self.ghostCount += 1
                 self.isSummoning = false
                 self.credits.spend()          // charge ONLY on success — failed summons are free
-                SummonStore.shared.save(img, original: photo, preset: style.name, mode: cinematic ? "Cinematic" : "Realistic")
+                SummonStore.shared.save(img, original: photo, preset: style.name, mode: "Realistic")
                 Analytics.track("ghost_rendered", ["count": self.ghostCount, "credits_left": self.credits.balance])
                 self.maybeAskForReview()      // positive moment: a ghost just appeared
             } catch {

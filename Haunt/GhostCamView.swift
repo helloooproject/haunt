@@ -187,8 +187,8 @@ struct GhostCamView: View {
     @ViewBuilder private var controls: some View {
         if engine.result != nil {
             VStack(spacing: 12) {
-                // Ghost-fade video — Realistic only (room is preserved, so only the ghost fades in).
-                if !engine.cinematic, sourcePhoto != nil {
+                // Ghost-fade video — room is preserved, so only the ghost fades in.
+                if sourcePhoto != nil {
                     Button { makeGhostVideo() } label: {
                         Label(makingVideo ? "SUMMONING…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
                             .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(1.5)
@@ -220,7 +220,6 @@ struct GhostCamView: View {
                     }
                 }
                 .padding(8).background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12)).padding(.horizontal)
-                modeToggle
                 primaryButton(engine.isSummoning ? "SUMMONING…" : "SUMMON") {
                     if let s = sourcePhoto { engine.summon(from: s) }
                 }.disabled(engine.isSummoning)
@@ -244,20 +243,6 @@ struct GhostCamView: View {
                 }
             }
             .padding(.horizontal)
-        }
-    }
-
-    private var modeToggle: some View {
-        HStack(spacing: 8) {
-            modeChip("REALISTIC", on: !engine.cinematic) { engine.cinematic = false }
-            modeChip("CINEMATIC", on: engine.cinematic) { engine.cinematic = true }
-        }
-    }
-    private func modeChip(_ t: String, on: Bool, _ action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(t).font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(on ? .black : .white)
-                .padding(.horizontal, 14).padding(.vertical, 8)
-                .background(on ? AnyShapeStyle(.white) : AnyShapeStyle(.white.opacity(0.12)), in: Capsule())
         }
     }
 

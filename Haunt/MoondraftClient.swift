@@ -64,7 +64,20 @@ enum GhostAPI {
         guard let url = firstImageURL(in: data) else { throw GhostError.network("Got a reply with no image.") }
         let (imgData, _) = try await URLSession.shared.data(from: url)
         guard let img = UIImage(data: imgData) else { throw GhostError.network("Couldn't decode the ghost image.") }
-        return img
+        // The model returns a square; resize the result to the ORIGINAL photo's exact size so
+        // the before/after reveal and the ghost-fade video align pixel-for-pixel.
+        return resize(img, to: photo.size)
+    }
+
+    /// Aspect-fill the image into `size` (scale to cover, center, crop overflow — no distortion).
+    private static func resize(_ image: UIImage, to size: CGSize) -> UIImage {
+        guard size.width > 0, size.height > 0, image.size.width > 0, image.size.height > 0 else { return image }
+        let fmt = UIGraphicsImageRendererFormat(); fmt.scale = 1
+        return UIGraphicsImageRenderer(size: size, format: fmt).image { _ in
+            let scale = max(size.width / image.size.width, size.height / image.size.height)
+            let w = image.size.width * scale, h = image.size.height * scale
+            image.draw(in: CGRect(x: (size.width - w) / 2, y: (size.height - h) / 2, width: w, height: h))
+        }
     }
 
     /// fal returns { images: [ { url } ] }. Pull the first url.

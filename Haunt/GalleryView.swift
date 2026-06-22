@@ -90,8 +90,8 @@ struct GalleryView: View {
                     .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.5))
                 Spacer(minLength: 0)
 
-                // Animate any past Realistic haunt — special feature = a reason to come back.
-                if s.mode == "Realistic", store.originalImage(for: s) != nil {
+                // Animate any past haunt that has its original — a reason to come back.
+                if store.originalImage(for: s) != nil {
                     Button { makeVideo(s) } label: {
                         Label(makingVideo ? "SUMMONING…" : "GHOST VIDEO", systemImage: "play.rectangle.fill")
                             .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(1.5)
