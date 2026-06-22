@@ -51,22 +51,29 @@ struct GalleryView: View {
     }
 
     private func cell(_ s: SavedSummon) -> some View {
-        ZStack(alignment: .bottomLeading) {
-            if let img = store.image(for: s) {
-                Image(uiImage: img).resizable().scaledToFill()
-            } else { Color.white.opacity(0.06) }
-            LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .center, endPoint: .bottom)
-            Text(s.preset.uppercased())
-                .font(.system(size: 10, design: .monospaced)).foregroundStyle(.white).padding(8)
-        }
-        .aspectRatio(0.8, contentMode: .fill)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        // Color.clear sets the cell size; image fills via overlay + clipped (no overflow).
+        Color.white.opacity(0.06)
+            .aspectRatio(0.8, contentMode: .fit)
+            .overlay {
+                if let img = store.image(for: s) {
+                    Image(uiImage: img).resizable().scaledToFill()
+                }
+            }
+            .overlay(alignment: .bottomLeading) {
+                LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .center, endPoint: .bottom)
+                    .overlay(alignment: .bottomLeading) {
+                        Text(s.preset.uppercased())
+                            .font(.system(size: 10, design: .monospaced)).foregroundStyle(.white).padding(8)
+                    }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private func detail(_ s: SavedSummon) -> some View {
         ZStack {
             Color.black.ignoresSafeArea()
             VStack(spacing: 16) {
+                Spacer(minLength: 0)
                 if let img = store.image(for: s), let orig = store.originalImage(for: s) {
                     BeforeAfterView(before: orig, after: img)   // drag to compare original ↔ haunted
                 } else if let img = store.image(for: s) {
@@ -74,6 +81,7 @@ struct GalleryView: View {
                 }
                 Text("\(s.preset.uppercased())  ·  \(s.mode.uppercased())")
                     .font(.system(.caption2, design: .monospaced)).tracking(1).foregroundStyle(.white.opacity(0.5))
+                Spacer(minLength: 0)
 
                 // Animate any past Realistic haunt — special feature = a reason to come back.
                 if s.mode == "Realistic", store.originalImage(for: s) != nil {
