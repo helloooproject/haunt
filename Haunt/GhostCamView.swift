@@ -10,7 +10,7 @@ struct GhostCamView: View {
     @State private var showShare = false
     @State private var showCamera = false
     @State private var showGallery = false
-    @State private var carouselIndex = 0
+    @State private var scrolledID: String?
     @State private var flash = false
     @State private var makingVideo = false
     @State private var videoURL: URL?
@@ -116,42 +116,70 @@ struct GhostCamView: View {
             .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: true) }
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
         } else {
-            // Content-first: only ghost posters. "Surprise me" is a shuffle action (below), never a card.
-            TabView(selection: $carouselIndex) {
-                ForEach(Array(GhostStyle.library.enumerated()), id: \.element.id) { i, s in
-                    ghostPoster(s).tag(i)
+            ghostCarousel
+                .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: false) }
+                .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
+                .onChange(of: scrolledID) { _, id in
+                    if let id, let s = GhostStyle.library.first(where: { $0.id == id }) { engine.selectedStyle = s }
                 }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader(compact: false) }
-            .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
-            .onChange(of: carouselIndex) { _, idx in
-                engine.selectedStyle = GhostStyle.library[idx]
-            }
-            .onAppear { engine.selectedStyle = GhostStyle.library[carouselIndex] }
+                .onAppear {
+                    if scrolledID == nil {
+                        scrolledID = GhostStyle.library.first?.id
+                        engine.selectedStyle = GhostStyle.library.first
+                    }
+                }
         }
     }
 
-    /// Ghost poster as a centered, clearly-inset card (aspect-fit so it never touches the edges).
-    private func ghostPoster(_ s: GhostStyle) -> some View {
-        VStack {
-            Spacer(minLength: 0)
-            ZStack(alignment: .bottom) {
-                if let img = s.posterImage {
-                    Image(uiImage: img).resizable().scaledToFill()
-                } else { Color.white.opacity(0.06) }
-                LinearGradient(colors: [.clear, .black.opacity(0.9)], startPoint: .center, endPoint: .bottom)
-                Text(s.name.uppercased())
-                    .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(3)
-                    .foregroundStyle(.white).padding(.bottom, 16)
+    // Peeking, snapping carousel — neighbors' edges show so it reads as swipeable.
+    private var ghostCarousel: some View {
+        GeometryReader { geo in
+            let cardW = min(geo.size.width * 0.76, 340)
+            let side = max(16, (geo.size.width - cardW) / 2)
+            VStack(spacing: 14) {
+                Spacer(minLength: 0)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 14) {
+                        ForEach(GhostStyle.library) { s in
+                            ghostCard(s).frame(width: cardW).id(s.id)
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.viewAligned)
+                .contentMargins(.horizontal, side, for: .scrollContent)
+                .scrollPosition(id: $scrolledID, anchor: .center)
+                .frame(height: cardW * 4 / 3)
+                dots
+                Spacer(minLength: 0)
             }
-            .aspectRatio(3.0/4.0, contentMode: .fit)
-            .clipShape(RoundedRectangle(cornerRadius: 24))
-            .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.15), lineWidth: 1))
-            .shadow(color: .black.opacity(0.6), radius: 22, y: 12)
-            Spacer(minLength: 0)
+            .frame(maxWidth: .infinity)
         }
-        .padding(.horizontal, 52)   // clear margins — card floats, never touches edges
+    }
+
+    private var dots: some View {
+        let idx = GhostStyle.library.firstIndex { $0.id == scrolledID } ?? 0
+        return HStack(spacing: 7) {
+            ForEach(GhostStyle.library.indices, id: \.self) { i in
+                Circle().fill(.white.opacity(i == idx ? 1 : 0.28)).frame(width: 6, height: 6)
+            }
+        }
+    }
+
+    private func ghostCard(_ s: GhostStyle) -> some View {
+        ZStack(alignment: .bottom) {
+            if let img = s.posterImage {
+                Image(uiImage: img).resizable().scaledToFill()
+            } else { Color.white.opacity(0.06) }
+            LinearGradient(colors: [.clear, .black.opacity(0.9)], startPoint: .center, endPoint: .bottom)
+            Text(s.name.uppercased())
+                .font(.system(.subheadline, design: .monospaced).weight(.bold)).tracking(3)
+                .foregroundStyle(.white).padding(.bottom, 16)
+        }
+        .aspectRatio(3.0 / 4.0, contentMode: .fill)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.15), lineWidth: 1))
+        .shadow(color: .black.opacity(0.6), radius: 18, y: 10)
     }
 
     private func pinnedHeader(compact: Bool) -> some View {
