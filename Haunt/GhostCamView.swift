@@ -156,7 +156,8 @@ struct GhostCamView: View {
 
     private func pinnedHeader(compact: Bool) -> some View {
         VStack(spacing: 4) {
-            Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 38 : 46)).foregroundStyle(.white).flicker()
+            Text("Haunt").font(.custom("PicNic-Regular", size: compact ? 38 : 46)).foregroundStyle(.white)
+                .shadow(color: .white.opacity(0.22), radius: 8)   // static glow, no blink
             if !compact {
                 Text("PICK A GHOST · ADD YOUR PHOTO")
                     .font(.system(.caption2, design: .monospaced)).tracking(2).foregroundStyle(.white.opacity(0.4)).padding(.top, 3)

@@ -22,12 +22,12 @@ final class GhostEngine: ObservableObject {
     // The whole point: take ONLY the ghost from Image 2; keep their room exactly theirs.
     private let composePrompt = """
     Image 1 is the user's real photo. Image 2 shows a specific ghost. Add that EXACT ghost to Image 1 like a real \
-    apparition ACCIDENTALLY CAUGHT in a snapshot. Do NOT center it and do NOT make it pose. Instead hide it: \
-    place it off to one side, deep in the background, partly concealed behind furniture or a door frame, down a \
-    hallway, peering from a doorway, reflected in a mirror/dark window, or half-cut by the edge of the frame. \
-    It can be small and distant or lurking at the periphery. Faint, semi-transparent, easy to miss at first glance \
-    then unmistakable. Ground it (floor contact, soft shadow, the room's own light). Deepen the shadows around it. \
-    Keep the room's layout, furniture and lighting recognizable. Photoreal, deeply unsettling, no text or watermark.
+    apparition caught on camera. PLACEMENT: do not center it or make it pose — position it off to one side, in the \
+    background, in a doorway, behind furniture, or near the edge of the frame, as if caught unintentionally. \
+    VISIBILITY: the ghost must be CLEARLY VISIBLE and solid enough to read instantly as a figure — a ghostly white \
+    draped apparition with glowing eyes, only lightly translucent (NOT faint, NOT barely-there). Hidden by where it \
+    stands, not by being invisible. Ground it (floor contact, soft shadow, the room's own light) and deepen the \
+    shadows around it. Keep the room's layout, furniture and lighting recognizable. Photoreal, deeply unsettling, no text.
     """
 
     func summon(from photo: UIImage) {
