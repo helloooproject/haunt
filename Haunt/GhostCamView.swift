@@ -24,6 +24,7 @@ struct GhostCamView: View {
             let url = await GhostVideo.makeFade(original: src, haunted: result)
             makingVideo = false
             if let url { videoURL = url; showVideoShare = true; Analytics.track("ghost_video_made") }
+            else { engine.errorText = "Couldn't make the video — try again."; Analytics.track("ghost_video_failed") }
         }
     }
 
