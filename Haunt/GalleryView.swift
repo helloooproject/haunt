@@ -106,6 +106,12 @@ struct GalleryView: View {
                 }.padding(.horizontal)
             }.padding()
         }
+        .overlay(alignment: .topTrailing) {
+            Button { selected = nil } label: {
+                Image(systemName: "xmark").font(.system(size: 15, weight: .bold)).foregroundStyle(.white)
+                    .padding(10).background(.ultraThinMaterial, in: Circle())
+            }.padding(.trailing, 16).padding(.top, 12)
+        }
         .preferredColorScheme(.dark)
         .sheet(isPresented: $showVideoShare) { if let v = videoURL { VideoRevealView(url: v) } }
     }
