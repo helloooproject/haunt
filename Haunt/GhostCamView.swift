@@ -202,8 +202,24 @@ struct GhostCamView: View {
                     actionButton("New photo", "photo.on.rectangle") { reset() }
                 }.padding(.horizontal)
             }
-        } else if sourcePhoto != nil {
-            VStack(spacing: 14) {
+        } else if let src = sourcePhoto {
+            VStack(spacing: 12) {
+                // Clear "your photo is loaded" indicator — tap to change, ✕ to remove.
+                HStack(spacing: 10) {
+                    Image(uiImage: src).resizable().scaledToFill()
+                        .frame(width: 44, height: 44).clipShape(RoundedRectangle(cornerRadius: 8))
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("YOUR PHOTO").font(.system(.caption2, design: .monospaced).weight(.bold)).tracking(1).foregroundStyle(.white)
+                        PhotosPicker("Change", selection: $pickerItem, matching: .images)
+                            .font(.system(.caption2, design: .monospaced)).foregroundStyle(.white.opacity(0.55))
+                    }
+                    Spacer()
+                    Button { reset() } label: {
+                        Image(systemName: "xmark").font(.system(size: 12, weight: .bold)).foregroundStyle(.white.opacity(0.7))
+                            .padding(8).background(.white.opacity(0.12), in: Circle())
+                    }
+                }
+                .padding(8).background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12)).padding(.horizontal)
                 modeToggle
                 primaryButton(engine.isSummoning ? "SUMMONING…" : "SUMMON") {
                     if let s = sourcePhoto { engine.summon(from: s) }
