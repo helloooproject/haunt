@@ -18,27 +18,27 @@ final class GhostEngine: ObservableObject {
     /// nil = "Surprise me" (random each summon). Otherwise the user's picked ghost.
     @Published var selectedStyle: GhostStyle?
 
-    // Reference-composite prompt. Image 1 = the user's photo (their room). Image 2 = the chosen ghost.
-    // The whole point: take ONLY the ghost from Image 2; keep their room exactly theirs.
-    private let composePrompt = """
-    Image 1 is the user's real photo. Image 2 shows a specific ghost. Add that EXACT ghost to Image 1 like a real \
-    apparition caught on camera. PLACEMENT: do not center it or make it pose — position it off to one side, in the \
-    background, in a doorway, behind furniture, or near the edge of the frame, as if caught unintentionally. \
-    VISIBILITY: the ghost must be CLEARLY VISIBLE and solid enough to read instantly as a figure — a ghostly white \
-    draped apparition with glowing eyes, only lightly translucent (NOT faint, NOT barely-there). Hidden by where it \
-    stands, not by being invisible. Ground it (floor contact, soft shadow, the room's own light) and deepen the \
-    shadows around it. Keep the room's layout, furniture and lighting recognizable. Photoreal, deeply unsettling, no text.
-    """
+    // Single-image composite. The ghost is described by the chosen archetype (no sheet reference).
+    private func composePrompt(for style: GhostStyle) -> String {
+        """
+        This is the user's real photo. Composite a frightening ghost into it: \(style.prompt). \
+        PLACEMENT: do not center it or make it pose — position it off to one side, in the background, in a doorway, \
+        behind furniture, or near the edge of the frame, as if caught on camera unintentionally. \
+        The ghost must be CLEARLY VISIBLE and solid enough to read instantly as a figure, grounded with a soft \
+        shadow and lit by the room's own light, with deepened shadows around it. \
+        Keep the room's layout, furniture and lighting exactly as they are. Photoreal, deeply unsettling, no text or watermark.
+        """
+    }
 
     func summon(from photo: UIImage) {
         guard credits.canSummon else { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "no_credits"]); return }
         errorText = nil; result = nil; isSummoning = true
         let style = selectedStyle ?? .random
         Analytics.track("ghost_summon_started", ["style": style.id, "surprise": selectedStyle == nil])
-        let prompt = composePrompt
+        let prompt = composePrompt(for: style)
         Task {
             do {
-                let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt, reference: style.referenceImage)
+                let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt, reference: nil)
                 self.result = img
                 self.ghostCount += 1
                 self.isSummoning = false

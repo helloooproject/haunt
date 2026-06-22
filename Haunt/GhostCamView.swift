@@ -137,7 +137,7 @@ struct GhostCamView: View {
         VStack {
             Spacer(minLength: 0)
             ZStack(alignment: .bottom) {
-                if let img = s.referenceImage {
+                if let img = s.posterImage {
                     Image(uiImage: img).resizable().scaledToFill()
                 } else { Color.white.opacity(0.06) }
                 LinearGradient(colors: [.clear, .black.opacity(0.9)], startPoint: .center, endPoint: .bottom)
