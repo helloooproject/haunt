@@ -21,23 +21,21 @@ final class GhostEngine: ObservableObject {
     // Reference-composite prompt. Image 1 = the user's photo (their room). Image 2 = the chosen ghost.
     // The whole point: take ONLY the ghost from Image 2; keep their room exactly theirs.
     private let composePrompt = """
-    Image 1 is the user's real photo. Image 2 shows a SPECIFIC ghost figure. \
-    Insert that EXACT ghost (same form, pose, draped sheet, glowing eyes, eerie style) standing inside Image 1's space \
-    as if physically present: its base in contact with the floor, a realistic soft cast shadow, correct human scale \
-    relative to the furniture, partially occluded by any objects in front of it, and lit by the room's existing light sources. \
-    Make it semi-transparent and ghostly yet solid enough to read as a real presence. \
-    Keep Image 1's room, furniture, walls, lighting, colors and composition EXACTLY unchanged — \
-    do not import anything from Image 2's background. Photoreal, unsettling, no text or watermark.
+    Image 1 is the user's real photo. Image 2 shows a specific ghost. Place that EXACT ghost into Image 1 but \
+    STAGE IT TO BE GENUINELY FRIGHTENING: positioned unsettlingly close to the camera OR emerging from a dark \
+    doorway/corner, slightly too tall, head tilted at an unnatural angle, with faint motion blur as if it just \
+    lurched toward the viewer. Ground it (floor contact, soft shadow, room light), semi-transparent but \
+    unmistakably there. Dim the nearby lights and deepen the shadows around it for dread. \
+    Keep the room's layout and furniture recognizable. Photoreal, deeply unsettling, no text or watermark.
     """
 
-    // "Cinematic" mode: same grounded ghost, then grade the whole scene into a film-horror look.
+    // "Cinematic" mode: looming ghost + full horror-film grade.
     private let cinematicPrompt = """
-    Image 1 is the user's real photo. Image 2 shows a SPECIFIC ghost figure. \
-    Insert that EXACT ghost (same form, pose, draped sheet, glowing eyes) standing inside Image 1's space as if physically \
-    present: base in contact with the floor, realistic cast shadow, correct human scale, lit by the scene. \
-    Then re-grade the whole image into a dark, desaturated, cinematic horror atmosphere (deep shadows, cold tones, \
-    subtle film grain, moody contrast). Keep the SAME scene and composition as Image 1 — do not import Image 2's setting. \
-    Photoreal, no text or watermark.
+    Image 1 is the user's real photo. Image 2 shows a specific ghost. Place that EXACT ghost LOOMING in Image 1's \
+    scene, then grade the entire image like a horror film / found-footage still: crushed blacks, sickly desaturated \
+    teal-green pallor, heavy film grain, strong vignette, a single cold low-key light source, faint haze. \
+    The ghost menacing and uncanny, partly swallowed by shadow. Keep the same room layout. \
+    Photoreal cinematic horror, no text or watermark.
     """
 
     /// false = Keep my room (truthful), true = Cinematic (graded).
