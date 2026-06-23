@@ -192,7 +192,7 @@ struct GhostCamView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.top, 4).padding(.bottom, 12)
+        .padding(.top, 28).padding(.bottom, 14)
         .background(LinearGradient(colors: [.black, .black, .black.opacity(0)], startPoint: .top, endPoint: .bottom))
     }
 
