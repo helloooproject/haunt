@@ -21,11 +21,8 @@ final class GhostEngine: ObservableObject {
     // The chosen villain's POSTER art is passed as Image 2 (the character reference), so the
     // summon matches exactly what the user picked. Simple prompt — the image carries the design.
     private let composePrompt = """
-    Image 1 is the user's real photo of a room. Image 2 shows an evil character. Insert the character from Image 2 \
-    into Image 1 in a natural but frightening pose — placed off to one side, in a doorway, or in the background, \
-    as if caught on camera, not posing for it. Take ONLY the character, not Image 2's background. \
-    Keep Image 1's room, furniture and lighting exactly as they are. Photoreal, cinematic, raw and genuinely scary. \
-    No text or watermark.
+    Insert the evil character from Image 2 into the real photo (Image 1) as if it were truly there, \
+    lurking in the scene. Keep Image 1's room unchanged. Cinematic, photoreal, genuinely scary.
     """
 
     func summon(from photo: UIImage) {
