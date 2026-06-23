@@ -14,7 +14,7 @@ struct PaywallView: View {
             VStack(spacing: 20) {
                 Spacer()
                 Text("👻").font(.system(size: 56))
-                Text("OUT OF SUMMONS").font(.system(.title2, design: .monospaced).weight(.bold)).tracking(2).foregroundStyle(.white)
+                Text(credits.balance > 0 ? "MORE SUMMONS" : "OUT OF SUMMONS").font(.system(.title2, design: .monospaced).weight(.bold)).tracking(2).foregroundStyle(.white)
                 Text("\(credits.balance) credits left").font(.system(.caption, design: .monospaced)).foregroundStyle(.white.opacity(0.5))
                 Spacer()
 

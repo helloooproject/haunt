@@ -202,8 +202,13 @@ struct GhostCamView: View {
                 Text(err).font(.callout).foregroundStyle(.red.opacity(0.9)).multilineTextAlignment(.center).padding(.horizontal)
             }
             controls
-            Text("\(credits.balance) CREDITS")
-                .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.35))
+            Button { engine.showPaywall = true } label: {
+                HStack(spacing: 6) {
+                    Text("\(credits.balance) CREDITS")
+                    Text("·  GET MORE").foregroundStyle(.white.opacity(0.85))
+                }
+                .font(.system(.caption2, design: .monospaced)).tracking(1.5).foregroundStyle(.white.opacity(0.4))
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.top, 14).padding(.bottom, 8)
