@@ -18,27 +18,25 @@ final class GhostEngine: ObservableObject {
     /// nil = "Surprise me" (random each summon). Otherwise the user's picked ghost.
     @Published var selectedStyle: GhostStyle?
 
-    // Single-image composite. The ghost is described by the chosen archetype (no sheet reference).
-    private func composePrompt(for style: GhostStyle) -> String {
-        """
-        This is the user's real photo. Composite a frightening ghost into it: \(style.prompt). \
-        PLACEMENT: do not center it or make it pose — position it off to one side, in the background, in a doorway, \
-        behind furniture, or near the edge of the frame, as if caught on camera unintentionally. \
-        The ghost must be CLEARLY VISIBLE and solid enough to read instantly as a figure, grounded with a soft \
-        shadow and lit by the room's own light, with deepened shadows around it. \
-        Keep the room's layout, furniture and lighting exactly as they are. Photoreal, deeply unsettling, no text or watermark.
-        """
-    }
+    // The chosen villain's POSTER art is passed as Image 2 (the character reference), so the
+    // summon matches exactly what the user picked. Simple prompt — the image carries the design.
+    private let composePrompt = """
+    Image 1 is the user's real photo of a room. Image 2 shows an evil character. Insert the character from Image 2 \
+    into Image 1 in a natural but frightening pose — placed off to one side, in a doorway, or in the background, \
+    as if caught on camera, not posing for it. Take ONLY the character, not Image 2's background. \
+    Keep Image 1's room, furniture and lighting exactly as they are. Photoreal, cinematic, raw and genuinely scary. \
+    No text or watermark.
+    """
 
     func summon(from photo: UIImage) {
         guard credits.canSummon else { showPaywall = true; Analytics.track("paywall_shown", ["trigger": "no_credits"]); return }
         errorText = nil; result = nil; isSummoning = true
         let style = selectedStyle ?? .random
         Analytics.track("ghost_summon_started", ["style": style.id, "surprise": selectedStyle == nil])
-        let prompt = composePrompt(for: style)
+        let prompt = composePrompt
         Task {
             do {
-                let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt, reference: nil)
+                let img = try await GhostAPI.summonGhost(into: photo, prompt: prompt, reference: style.posterImage)
                 self.result = img
                 self.ghostCount += 1
                 self.isSummoning = false
